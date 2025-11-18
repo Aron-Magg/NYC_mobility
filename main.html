@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>NYC - Milan Mobility</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Libraries for future visualizations (already prepared but not yet used) -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/nouislider@15.5.0/dist/nouislider.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/nouislider@15.5.0/dist/nouislider.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <!-- Top bar + title -->
+  <div class="top-bar">
+    <h1 id="title-style">New York City & Milan Mobility</h1>
+    <nav>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#section1">Section 1</a></li>
+        <li><a href="#section2">Section 2</a></li>
+        <li><a href="#section3">Section 3</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Intro / main header -->
+  <header class="banner" id="home">
+    <div class="intro-container">
+      <div class="intro-title">New York City & Milan Mobility</div>
+      <p class="intro-subtitle">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed magna metus, dapibus ac bibendum quis, posuere ut est. Donec sem leo, lacinia in efficitur vitae, iaculis iaculis ligula. Praesent ullamcorper lorem odio, vel molestie metus convallis elementum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Maecenas dictum aliquam risus, maximus placerat nibh. Morbi nibh urna, blandit molestie dolor quis, ornare mollis felis. Donec eget ante tempus, condimentum erat quis, vehicula est. In in nisi euismod, congue sem non, hendrerit est. Vivamus pellentesque ante ac nisi blandit, at rhoncus sapien viverra. 
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <!-- Section 1 -->
+    <section id="section1" class="page-section">
+      <div class="section-inner">
+        <div class="section-header">
+          <h2 class="section-title">Title 1</h2>
+        </div>
+        <!-- Future content -->
+      </div>
+    </section>
+
+    <!-- Section 2 -->
+    <section id="section2" class="page-section">
+      <div class="section-inner">
+        <div class="section-header">
+          <h2 class="section-title">Title 2</h2>
+        </div>
+        <!-- Future content -->
+      </div>
+    </section>
+
+    <!-- Section 3 -->
+    <section id="section3" class="page-section">
+      <div class="section-inner">
+        <div class="section-header">
+          <h2 class="section-title">Title 3</h2>
+        </div>
+        <!-- Future content -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="main-footer">
+    <div>Adoh Emmanuel, Aron Maggisano, Francesco Masolini, Maithili Nalawade</div>
+    <div><i>SUPSI 2025/2026 – Bachelor in Data Science and Artificial Intelligence</i></div>
+    <div><i>Data Visualization Course M-D32023</i></div>
+  </footer>
+
+  <script>
+    // Smooth scroll between sections
+    document.querySelectorAll('.top-bar nav a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const href = link.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            window.scrollTo({
+              top: target.offsetTop - 60, // top-bar height
+              behavior: 'smooth'
+            });
+          }
+        }
+      });
+    });
+
+    // To be continued...
+  </script>
+</body>
+
+</html>
