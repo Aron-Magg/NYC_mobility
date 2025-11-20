@@ -19,20 +19,29 @@
 
 ---
 
-## **0. Project Structure & Usage Guide**
+## 0. Project Structure & Usage Guide
 
-The project folder is organized as follows:
+The project directory is organized as follows:
 
-```
+```bash
 .
-├── DataPreProcessing        # Scripts and notebooks for cleaning, harmonizing, and aggregating data
-├── DataVisualizations       # Scripts and notebooks for generating visualizations and animations
-├── Datasets                 # Raw and processed datasets for NYC and Milan
-├── README.md                # Project overview and documentation
-└── Utilities                # Helper scripts and environment setup
-    ├── clean.sh             # Script to remove virtual environment and temporary files
-    ├── requirements.txt     # Python dependencies for the project
-    └── start_jupyter_lab.sh # Script to create/use virtual environment and launch JupyterLab
+├── DataPreProcessing/          # Notebooks and scripts for cleaning and preparing the data
+├── DataVisualizations/         # Notebooks and scripts for plots, maps, and visual analysis
+├── Datasets/                   # Processed datasets used by the visualizations
+├── tripdata/                   # Raw trip data (e.g., Citi Bike data)
+│   └── JC-201509-202510-citibike-tripdata.csv
+├── Utilities/                  # Utility scripts and helper tools
+│   ├── clean.sh                # Script to clean temporary files / artifacts
+│   ├── download_datasets.py    # Script to download all required datasets
+│   ├── requirements.txt        # Python dependencies for the project
+│   └── start_jupyter_lab.sh    # Convenience script to launch Jupyter Lab
+├── Resources/                  # Static assets used in the web interface
+│   └── images/
+│       ├── background.jpeg     # Global background image
+│       └── intro-banner.jpg    # Banner image for the intro section
+├── main.html                   # Main HTML file for the web-based visualization
+├── styles.css                  # Stylesheet for the web interface
+└── README.md                   # Project documentation (this file)
 ```
 
 ### **0.1. Getting Started**
@@ -131,9 +140,15 @@ Each city’s data is harmonized into:
 
 ---
 
-## **4. Data Pre-processing**
+## 4. Data Pre-processing
 
-[to be completed]
+### 4.0 Data Download
+
+To download all the required datasets, run the following command from the project root:
+
+```bash
+python -m Utilities.download_datasets
+```
 
 ### **4.1 Data Cleaning**
 
