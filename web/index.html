@@ -1,0 +1,1442 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>NYC Mobility</title>
+
+        <!-- Light mode favicon -->
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            href="images/icons/train-subway_DarkMode.svg"
+            media="(prefers-color-scheme: light)"
+        />
+
+        <!-- Dark mode favicon -->
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            href="images/icons/train-subway_WhiteMode.svg"
+            media="(prefers-color-scheme: dark)"
+        />
+
+        <!-- Generic fallback favicon -->
+        <link
+            rel="icon"
+            type="image/svg+xml"
+            href="images/icons/train-subway_DarkMode.svg"
+        />
+
+        <!-- External CSS -->
+        <link rel="stylesheet" href="css/styles.css" />
+        <link rel="stylesheet" href="css/charts/general-map.css" />
+        <link rel="stylesheet" href="css/charts/bikes-map.css" />
+        <link rel="stylesheet" href="css/charts/transport-usage.css" />
+        <link rel="stylesheet" href="css/charts/how-people-move.css" />
+        <link rel="stylesheet" href="css/charts/taxis-map.css" />
+        <link rel="stylesheet" href="css/charts/buses-map.css" />
+        <link rel="stylesheet" href="css/charts/subway-map.css" />
+        <link rel="stylesheet" href="css/charts/walking-map.css" />
+    </head>
+
+    <body>
+        <!-- SIDEBAR -->
+        <div class="side-bar-outer">
+            <a href="#home">
+                <div class="side-bar-title">NYC</div>
+            </a>
+
+            <div class="side-bar">
+                <ul class="menu">
+                    <li><a href="#chapter-introduction">Intro</a></li>
+                    <li><a href="#chapter-mobility">Mobility</a></li>
+                    <li><a href="#chapter-bikes">Bikes</a></li>
+                    <li><a href="#chapter-taxis">Taxis</a></li>
+                    <li><a href="#chapter-buses">Buses</a></li>
+                    <li><a href="#chapter-subway">Subway</a></li>
+                    <li><a href="#chapter-walking">Walking</a></li>
+                    <li><a href="#chapter-conclusion">Conclusion</a></li>
+                    <li><a href="#chapter-references">References</a></li>
+                    <li><a href="#chapter-credits">Credits</a></li>
+                </ul>
+
+                <div class="menu-indicator"></div>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <main style="font-size: 30px">
+            <!-- HOME (simple, outside "chapter" layout) -->
+            <section id="home">
+                <h1>New York City Mobility</h1>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Magnam, repellendus. Facere dolorem ducimus quo laudantium
+                    veniam perspiciatis nulla molestiae accusantium, autem fuga
+                    doloremque pariatur consectetur optio dolor earum omnis
+                    odit.
+                </p>
+            </section>
+
+            <!-- INTRODUCTION -->
+            <section id="chapter-introduction" class="chapter">
+                <h2 class="chapter-heading"><span>Introduction</span></h2>
+
+                <div class="chapter-layout">
+                    <div class="chapter-bracket"></div>
+                    <div class="chapter-box">
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            elit. Magnam, repellendus. Facere dolorem ducimus
+                            quo laudantium veniam perspiciatis nulla molestiae
+                            accusantium, autem fuga doloremque pariatur
+                            consectetur optio dolor earum omnis odit.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HOW PEOPLE MOVE (BIG PIE + BARS) -->
+            <section id="chapter-mobility" class="chapter">
+                <h2 class="chapter-heading"><span>How People Move</span></h2>
+
+                <div class="chapter-layout">
+                    <div class="chapter-bracket"></div>
+                    <div class="chapter-box">
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Quae excepturi asperiores molestias natus
+                            fugiat ducimus ullam dolore, error facere
+                            accusantium exercitationem sequi cupiditate atque
+                            ratione veniam quasi magnam mollitia.
+                        </p>
+
+                        <!-- Big mode-share pie + yearly bar chart -->
+                        <div class="mobility-pie-card">
+                            <div class="mobility-pie-card__title">
+                                How people move in NYC
+                            </div>
+
+                            <!-- Top row: pie (left) + bars (right) -->
+                            <div class="mobility-pie-card__top">
+                                <!-- Pie chart container -->
+                                <div
+                                    id="mobility-pie"
+                                    class="mobility-pie-card__chart"
+                                >
+                                    <div class="mobility-pie-card__chart-title">
+                                        Mode share
+                                    </div>
+                                    <!-- SVG injected by how-people-move.js -->
+                                </div>
+
+                                <!-- Bar chart container (years) -->
+                                <div
+                                    id="mobility-bars"
+                                    class="mobility-pie-card__bars"
+                                >
+                                    <div class="mobility-pie-card__bars-title">
+                                        Riders per year
+                                    </div>
+                                    <!-- SVG injected by how-people-move.js -->
+                                </div>
+                            </div>
+
+                            <!-- Legend below both charts -->
+                            <div
+                                id="mobility-pie-legend"
+                                class="mobility-pie-card__legend"
+                            >
+                                <!-- Legend items filled by how-people-move.js -->
+                            </div>
+                        </div>
+
+                        <!-- Explanatory text under the card -->
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. This text can explain how each transport mode
+                            contributes to the overall mobility picture, and how
+                            the total number of riders has changed over time.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BIKES -->
+            <section id="chapter-bikes" class="chapter">
+                <h2 class="chapter-heading"><span>Bikes</span></h2>
+
+                <div class="chapter-layout">
+                    <div class="chapter-bracket"></div>
+                    <div class="chapter-box">
+                        <!-- Map card with map + controls below -->
+                        <div class="map-card bikes-map-wrapper">
+                            <div class="map-card__title bikes-map-title">
+                                Citi Bike &amp; NYC boroughs
+                            </div>
+
+                            <!-- D3 map target -->
+                            <div
+                                id="bikes-map"
+                                class="map-card__map bikes-map"
+                            ></div>
+
+                            <!-- View options (radio buttons) -->
+                            <form
+                                class="map-card__controls bikes-map-controls"
+                                aria-label="Bike map view options"
+                            >
+                                <fieldset>
+                                    <legend>View options</legend>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="bikes-map-view"
+                                            value="stations"
+                                            checked
+                                        />
+                                        Stations map
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="bikes-map-view"
+                                            value="flows"
+                                        />
+                                        Flows
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="bikes-map-view"
+                                            value="usage"
+                                        />
+                                        Usage map
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="bikes-map-view"
+                                            value="all"
+                                        />
+                                        All layers
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="bikes-map-view"
+                                            value="temporal-change"
+                                        />
+                                        Temporal change
+                                    </label>
+                                </fieldset>
+                            </form>
+                        </div>
+
+                        <!-- Intro text under the map card -->
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Tenetur odit nisi consequuntur commodi
+                            reiciendis maiores iste, optio alias. Maiores
+                            tenetur labore laborum ab accusantium possimus,
+                            porro tempore aliquid placeat.
+                        </p>
+
+                        <!-- Bikes: line chart + settings + 4 pies -->
+                        <div class="transport-usage-card">
+                            <!-- Top row: line chart + settings -->
+                            <div class="transport-usage-card__top">
+                                <!-- Line chart container -->
+                                <div
+                                    id="bikes-usage-line"
+                                    class="transport-usage-card__line"
+                                ></div>
+
+                                <!-- Settings panel -->
+                                <form
+                                    class="transport-usage-card__settings"
+                                    aria-label="Bike usage settings"
+                                >
+                                    <fieldset>
+                                        <legend>Chart settings</legend>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="bikes-usage-start"
+                                                >Start date</label
+                                            >
+                                            <input
+                                                type="date"
+                                                id="bikes-usage-start"
+                                                name="bikes-usage-start"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="bikes-usage-end"
+                                                >End date</label
+                                            >
+                                            <input
+                                                type="date"
+                                                id="bikes-usage-end"
+                                                name="bikes-usage-end"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <span
+                                                class="transport-usage-card__field-title"
+                                                >Color theme</span
+                                            >
+                                            <div
+                                                class="transport-usage-card__color-options"
+                                            >
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="bikes-usage-color"
+                                                        value="green"
+                                                        checked
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--green"
+                                                    ></span>
+                                                    Green
+                                                </label>
+
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="bikes-usage-color"
+                                                        value="blue"
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--blue"
+                                                    ></span>
+                                                    Blue
+                                                </label>
+
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="bikes-usage-color"
+                                                        value="magenta"
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--magenta"
+                                                    ></span>
+                                                    Magenta
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="bikes-usage-aggregation"
+                                                >Time aggregation</label
+                                            >
+                                            <select
+                                                id="bikes-usage-aggregation"
+                                                name="bikes-usage-aggregation"
+                                            >
+                                                <option value="day">
+                                                    Daily
+                                                </option>
+                                                <option value="week">
+                                                    Weekly
+                                                </option>
+                                                <option value="month" selected>
+                                                    Monthly
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+
+                            <!-- Bottom row: four pie charts -->
+                            <div class="transport-usage-card__pies">
+                                <div
+                                    id="bikes-usage-pie-1"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="bikes-usage-pie-2"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="bikes-usage-pie-3"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="bikes-usage-pie-4"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                            </div>
+                        </div>
+
+                        <!-- Final explanation text under the bikes block -->
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Explicabo, deleniti. This paragraph will
+                            contain the explanation of how bike usage evolves
+                            over time, how the segments in the pie charts are
+                            defined, and the main insights to take away.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAXIS -->
+            <section id="chapter-taxis" class="chapter">
+                <h2 class="chapter-heading"><span>Taxis</span></h2>
+
+                <div class="chapter-layout">
+                    <div class="chapter-bracket"></div>
+                    <div class="chapter-box">
+                        <!-- Map card for taxis -->
+                        <div class="map-card taxis-map-wrapper">
+                            <div class="map-card__title taxis-map-title">
+                                Taxi &amp; for-hire vehicles
+                            </div>
+
+                            <div id="taxis-map" class="map-card__map taxis-map">
+                                <!-- Taxi map (D3) injected by taxis-map.js -->
+                            </div>
+
+                            <form
+                                class="map-card__controls taxis-map-controls"
+                                aria-label="Taxi map view options"
+                            >
+                                <fieldset>
+                                    <legend>View options</legend>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="taxis-map-view"
+                                            value="pickups"
+                                            checked
+                                        />
+                                        Pick-up density
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="taxis-map-view"
+                                            value="dropoffs"
+                                        />
+                                        Drop-off density
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="taxis-map-view"
+                                            value="zones"
+                                        />
+                                        Zones
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="taxis-map-view"
+                                            value="temporal"
+                                        />
+                                        Temporal change
+                                    </label>
+                                </fieldset>
+                            </form>
+                        </div>
+
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Explicabo sed cupiditate nobis cumque
+                            recusandae, voluptatem quaerat quibusdam. Eius ipsam
+                            minus voluptatem itaque fugiat? Saepe possimus
+                            repellat quos asperiores voluptas sapiente.
+                        </p>
+
+                        <!-- Usage card for taxis (structure ready; charts can be added later) -->
+                        <div class="transport-usage-card">
+                            <div class="transport-usage-card__top">
+                                <div
+                                    id="taxis-usage-line"
+                                    class="transport-usage-card__line"
+                                >
+                                    <!-- Future taxis line chart -->
+                                </div>
+
+                                <form
+                                    class="transport-usage-card__settings"
+                                    aria-label="Taxi usage settings"
+                                >
+                                    <fieldset>
+                                        <legend>Chart settings</legend>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="taxis-usage-start"
+                                                >Start date</label
+                                            >
+                                            <input
+                                                type="date"
+                                                id="taxis-usage-start"
+                                                name="taxis-usage-start"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="taxis-usage-end"
+                                                >End date</label
+                                            >
+                                            <input
+                                                type="date"
+                                                id="taxis-usage-end"
+                                                name="taxis-usage-end"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <span
+                                                class="transport-usage-card__field-title"
+                                                >Color theme</span
+                                            >
+                                            <div
+                                                class="transport-usage-card__color-options"
+                                            >
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="taxis-usage-color"
+                                                        value="yellow"
+                                                        checked
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--green"
+                                                    ></span>
+                                                    Yellow
+                                                </label>
+
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="taxis-usage-color"
+                                                        value="blue"
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--blue"
+                                                    ></span>
+                                                    Blue
+                                                </label>
+
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="taxis-usage-color"
+                                                        value="magenta"
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--magenta"
+                                                    ></span>
+                                                    Magenta
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="taxis-usage-aggregation"
+                                                >Time aggregation</label
+                                            >
+                                            <select
+                                                id="taxis-usage-aggregation"
+                                                name="taxis-usage-aggregation"
+                                            >
+                                                <option value="day">
+                                                    Daily
+                                                </option>
+                                                <option value="week">
+                                                    Weekly
+                                                </option>
+                                                <option value="month" selected>
+                                                    Monthly
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+
+                            <div class="transport-usage-card__pies">
+                                <div
+                                    id="taxis-usage-pie-1"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="taxis-usage-pie-2"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="taxis-usage-pie-3"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="taxis-usage-pie-4"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BUSES -->
+            <section id="chapter-buses" class="chapter">
+                <h2 class="chapter-heading"><span>Buses</span></h2>
+
+                <div class="chapter-layout">
+                    <div class="chapter-bracket"></div>
+                    <div class="chapter-box">
+                        <!-- Map card for buses -->
+                        <div class="map-card buses-map-wrapper">
+                            <div class="map-card__title buses-map-title">
+                                Bus stops &amp; routes
+                            </div>
+
+                            <div id="buses-map" class="map-card__map buses-map">
+                                <!-- Bus map (D3) injected by buses-map.js -->
+                            </div>
+
+                            <form
+                                class="map-card__controls buses-map-controls"
+                                aria-label="Bus map view options"
+                            >
+                                <fieldset>
+                                    <legend>View options</legend>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="buses-map-view"
+                                            value="stops"
+                                            checked
+                                        />
+                                        Stops
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="buses-map-view"
+                                            value="routes"
+                                        />
+                                        Routes
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="buses-map-view"
+                                            value="frequency"
+                                        />
+                                        Service frequency
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="buses-map-view"
+                                            value="temporal"
+                                        />
+                                        Temporal change
+                                    </label>
+                                </fieldset>
+                            </form>
+                        </div>
+
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Fugiat ea perferendis cupiditate cumque
+                            similique illum consectetur commodi error veritatis
+                            debitis autem libero adipisci, voluptatibus a
+                            magnam? Iure cum sit non.
+                        </p>
+
+                        <!-- Usage card for buses -->
+                        <div class="transport-usage-card">
+                            <div class="transport-usage-card__top">
+                                <div
+                                    id="buses-usage-line"
+                                    class="transport-usage-card__line"
+                                >
+                                    <!-- Future buses line chart -->
+                                </div>
+
+                                <form
+                                    class="transport-usage-card__settings"
+                                    aria-label="Bus usage settings"
+                                >
+                                    <fieldset>
+                                        <legend>Chart settings</legend>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="buses-usage-start"
+                                                >Start date</label
+                                            >
+                                            <input
+                                                type="date"
+                                                id="buses-usage-start"
+                                                name="buses-usage-start"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="buses-usage-end"
+                                                >End date</label
+                                            >
+                                            <input
+                                                type="date"
+                                                id="buses-usage-end"
+                                                name="buses-usage-end"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <span
+                                                class="transport-usage-card__field-title"
+                                                >Color theme</span
+                                            >
+                                            <div
+                                                class="transport-usage-card__color-options"
+                                            >
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="buses-usage-color"
+                                                        value="green"
+                                                        checked
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--green"
+                                                    ></span>
+                                                    Green
+                                                </label>
+
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="buses-usage-color"
+                                                        value="blue"
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--blue"
+                                                    ></span>
+                                                    Blue
+                                                </label>
+
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="buses-usage-color"
+                                                        value="magenta"
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--magenta"
+                                                    ></span>
+                                                    Magenta
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="buses-usage-aggregation"
+                                                >Time aggregation</label
+                                            >
+                                            <select
+                                                id="buses-usage-aggregation"
+                                                name="buses-usage-aggregation"
+                                            >
+                                                <option value="day">
+                                                    Daily
+                                                </option>
+                                                <option value="week">
+                                                    Weekly
+                                                </option>
+                                                <option value="month" selected>
+                                                    Monthly
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+
+                            <div class="transport-usage-card__pies">
+                                <div
+                                    id="buses-usage-pie-1"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="buses-usage-pie-2"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="buses-usage-pie-3"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="buses-usage-pie-4"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SUBWAY -->
+            <section id="chapter-subway" class="chapter">
+                <h2 class="chapter-heading"><span>Subway</span></h2>
+
+                <div class="chapter-layout">
+                    <div class="chapter-bracket"></div>
+                    <div class="chapter-box">
+                        <!-- Map card for subway -->
+                        <div class="map-card subway-map-wrapper">
+                            <div class="map-card__title subway-map-title">
+                                Subway stations &amp; lines
+                            </div>
+
+                            <div
+                                id="subway-map"
+                                class="map-card__map subway-map"
+                            >
+                                <!-- Subway map (D3) injected by subway-map.js -->
+                            </div>
+
+                            <form
+                                class="map-card__controls subway-map-controls"
+                                aria-label="Subway map view options"
+                            >
+                                <fieldset>
+                                    <legend>View options</legend>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="subway-map-view"
+                                            value="stations"
+                                            checked
+                                        />
+                                        Stations
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="subway-map-view"
+                                            value="lines"
+                                        />
+                                        Lines
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="subway-map-view"
+                                            value="frequency"
+                                        />
+                                        Service frequency
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="subway-map-view"
+                                            value="temporal"
+                                        />
+                                        Temporal change
+                                    </label>
+                                </fieldset>
+                            </form>
+                        </div>
+
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Laudantium voluptates illo aliquam placeat
+                            sint eligendi autem corrupti, aperiam voluptatibus
+                            quod rem. Consequatur ut dolorum, rem commodi
+                            voluptatum omnis magnam iste.
+                        </p>
+
+                        <!-- Usage card for subway -->
+                        <div class="transport-usage-card">
+                            <div class="transport-usage-card__top">
+                                <div
+                                    id="subway-usage-line"
+                                    class="transport-usage-card__line"
+                                >
+                                    <!-- Future subway line chart -->
+                                </div>
+
+                                <form
+                                    class="transport-usage-card__settings"
+                                    aria-label="Subway usage settings"
+                                >
+                                    <fieldset>
+                                        <legend>Chart settings</legend>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="subway-usage-start"
+                                                >Start date</label
+                                            >
+                                            <input
+                                                type="date"
+                                                id="subway-usage-start"
+                                                name="subway-usage-start"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="subway-usage-end"
+                                                >End date</label
+                                            >
+                                            <input
+                                                type="date"
+                                                id="subway-usage-end"
+                                                name="subway-usage-end"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <span
+                                                class="transport-usage-card__field-title"
+                                                >Color theme</span
+                                            >
+                                            <div
+                                                class="transport-usage-card__color-options"
+                                            >
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="subway-usage-color"
+                                                        value="green"
+                                                        checked
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--green"
+                                                    ></span>
+                                                    Green
+                                                </label>
+
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="subway-usage-color"
+                                                        value="blue"
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--blue"
+                                                    ></span>
+                                                    Blue
+                                                </label>
+
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="subway-usage-color"
+                                                        value="magenta"
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--magenta"
+                                                    ></span>
+                                                    Magenta
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label
+                                                for="subway-usage-aggregation"
+                                                >Time aggregation</label
+                                            >
+                                            <select
+                                                id="subway-usage-aggregation"
+                                                name="subway-usage-aggregation"
+                                            >
+                                                <option value="day">
+                                                    Daily
+                                                </option>
+                                                <option value="week">
+                                                    Weekly
+                                                </option>
+                                                <option value="month" selected>
+                                                    Monthly
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+
+                            <div class="transport-usage-card__pies">
+                                <div
+                                    id="subway-usage-pie-1"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="subway-usage-pie-2"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="subway-usage-pie-3"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="subway-usage-pie-4"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- WALKING -->
+            <section id="chapter-walking" class="chapter">
+                <h2 class="chapter-heading"><span>Walking</span></h2>
+
+                <div class="chapter-layout">
+                    <div class="chapter-bracket"></div>
+                    <div class="chapter-box">
+                        <!-- Map card for walking (e.g. pedestrian areas, parks) -->
+                        <div class="map-card walking-map-wrapper">
+                            <div class="map-card__title walking-map-title">
+                                Pedestrian areas &amp; parks
+                            </div>
+
+                            <div
+                                id="walking-map"
+                                class="map-card__map walking-map"
+                            >
+                                <!-- Walking-related map (D3) injected by walking-map.js -->
+                            </div>
+
+                            <form
+                                class="map-card__controls walking-map-controls"
+                                aria-label="Walking map view options"
+                            >
+                                <fieldset>
+                                    <legend>View options</legend>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="walking-map-view"
+                                            value="foot-traffic"
+                                            checked
+                                        />
+                                        Foot traffic
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="walking-map-view"
+                                            value="parks"
+                                        />
+                                        Parks
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="walking-map-view"
+                                            value="pedestrian-zones"
+                                        />
+                                        Pedestrian zones
+                                    </label>
+
+                                    <label>
+                                        <input
+                                            type="radio"
+                                            name="walking-map-view"
+                                            value="temporal"
+                                        />
+                                        Temporal change
+                                    </label>
+                                </fieldset>
+                            </form>
+                        </div>
+
+                        <p>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing
+                            elit. Asperiores facere eaque veritatis, aut maxime
+                            accusamus magnam quo laudantium vero ipsa, quod iste
+                            commodi. Asperiores at impedit aut et voluptate.
+                        </p>
+
+                        <!-- Usage card for walking -->
+                        <div class="transport-usage-card">
+                            <div class="transport-usage-card__top">
+                                <div
+                                    id="walking-usage-line"
+                                    class="transport-usage-card__line"
+                                >
+                                    <!-- Future walking line chart -->
+                                </div>
+
+                                <form
+                                    class="transport-usage-card__settings"
+                                    aria-label="Walking usage settings"
+                                >
+                                    <fieldset>
+                                        <legend>Chart settings</legend>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="walking-usage-start"
+                                                >Start date</label
+                                            >
+                                            <input
+                                                type="date"
+                                                id="walking-usage-start"
+                                                name="walking-usage-start"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label for="walking-usage-end"
+                                                >End date</label
+                                            >
+                                            <input
+                                                type="date"
+                                                id="walking-usage-end"
+                                                name="walking-usage-end"
+                                            />
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <span
+                                                class="transport-usage-card__field-title"
+                                                >Color theme</span
+                                            >
+                                            <div
+                                                class="transport-usage-card__color-options"
+                                            >
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="walking-usage-color"
+                                                        value="green"
+                                                        checked
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--green"
+                                                    ></span>
+                                                    Green
+                                                </label>
+
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="walking-usage-color"
+                                                        value="blue"
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--blue"
+                                                    ></span>
+                                                    Blue
+                                                </label>
+
+                                                <label
+                                                    class="transport-usage-card__color-option"
+                                                >
+                                                    <input
+                                                        type="radio"
+                                                        name="walking-usage-color"
+                                                        value="magenta"
+                                                    />
+                                                    <span
+                                                        class="transport-usage-card__color-swatch transport-usage-card__color-swatch--magenta"
+                                                    ></span>
+                                                    Magenta
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            class="transport-usage-card__field"
+                                        >
+                                            <label
+                                                for="walking-usage-aggregation"
+                                                >Time aggregation</label
+                                            >
+                                            <select
+                                                id="walking-usage-aggregation"
+                                                name="walking-usage-aggregation"
+                                            >
+                                                <option value="day">
+                                                    Daily
+                                                </option>
+                                                <option value="week">
+                                                    Weekly
+                                                </option>
+                                                <option value="month" selected>
+                                                    Monthly
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+
+                            <div class="transport-usage-card__pies">
+                                <div
+                                    id="walking-usage-pie-1"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="walking-usage-pie-2"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="walking-usage-pie-3"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                                <div
+                                    id="walking-usage-pie-4"
+                                    class="transport-usage-card__pie"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONCLUSION -->
+            <section id="chapter-conclusion" class="chapter">
+                <h2 class="chapter-heading"><span>Conclusion</span></h2>
+
+                <div class="chapter-layout">
+                    <div class="chapter-bracket"></div>
+                    <div class="chapter-box">
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Labore perspiciatis, laudantium facilis enim
+                            totam doloremque, eveniet quia, velit architecto a
+                            modi nobis est error nostrum numquam. Nihil,
+                            aspernatur excepturi.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REFERENCES -->
+            <section id="chapter-references" class="chapter">
+                <h2 class="chapter-heading"><span>References</span></h2>
+
+                <div class="chapter-layout">
+                    <div class="chapter-bracket"></div>
+                    <div class="chapter-box">
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Cum, illum quo! Ipsam deleniti, exercitationem
+                            minus tempore, ipsa perferendis quod unde laborum,
+                            aliquid assumenda doloribus eum! Tenetur pariatur
+                            nihil adipisci!
+                        </p>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Cum, illum quo! Ipsam deleniti, exercitationem
+                            minus tempore, ipsa perferendis quod unde laborum,
+                            aliquid assumenda doloribus eum! Tenetur pariatur
+                            nihil adipisci!
+                        </p>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Cum, illum quo! Ipsam deleniti, exercitationem
+                            minus tempore, ipsa perferendis quod unde laborum,
+                            aliquid assumenda doloribus eum! Tenetur pariatur
+                            nihil adipisci!
+                        </p>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Cum, illum quo! Ipsam deleniti, exercitationem
+                            minus tempore, ipsa perferendis quod unde laborum,
+                            aliquid assumenda doloribus eum! Tenetur pariatur
+                            nihil adipisci!
+                        </p>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Cum, illum quo! Ipsam deleniti, exercitationem
+                            minus tempore, ipsa perferendis quod unde laborum,
+                            aliquid assumenda doloribus eum! Tenetur pariatur
+                            nihil adipisci!
+                        </p>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Cum, illum quo! Ipsam deleniti, exercitationem
+                            minus tempore, ipsa perferendis quod unde laborum,
+                            aliquid assumenda doloribus eum! Tenetur pariatur
+                            nihil adipisci!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CREDITS -->
+            <section id="chapter-credits" class="chapter">
+                <h2 class="chapter-heading"><span>Credits</span></h2>
+
+                <div class="chapter-layout">
+                    <div class="chapter-bracket"></div>
+                    <div class="chapter-box">
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Officia doloremque ducimus culpa omnis cumque
+                            ab exercitationem sequi, inventore temporibus
+                            dignissimos deserunt blanditiis consequuntur
+                            architecto, alias dolorum hic aliquid sint.
+                        </p>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Doloremque, pariatur! Labore veritatis
+                            voluptas harum, odit similique asperiores animi
+                            ipsam a vero ratione. Maxime obcaecati quam sapiente
+                            dignissimos repellat molestias.
+                        </p>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Cum, illum quo! Ipsam deleniti, exercitationem
+                            minus tempore, ipsa perferendis quod unde laborum,
+                            aliquid assumenda doloribus eum! Tenetur pariatur
+                            nihil adipisci!
+                        </p>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing
+                            elit. Cum, illum quo! Ipsam deleniti, exercitationem
+                            minus tempore, ipsa perferendis quod unde laborum,
+                            aliquid assumenda doloribus eum! Tenetur pariatur
+                            nihil adipisci!
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="main-footer">
+                <div>
+                    Emmanuel Adoh, Aron Maggisano, Francesco Masolini, Maithili
+                    Nalawade
+                </div>
+                <div>
+                    <i
+                        >SUPSI 2025/2026 - Bachelor in Data Science and
+                        Artificial Intelligence</i
+                    >
+                </div>
+                <div><i>Data Visualization Course M-D32023</i></div>
+            </footer>
+        </main>
+
+        <!-- TRAIN EASTER EGG -->
+        <div id="easter-train" class="easter-train" aria-hidden="true">
+            <img src="images/train/Vagon.png" alt="" class="train-car" />
+            <img src="images/train/Vagon.png" alt="" class="train-car" />
+            <img src="images/train/Vagon.png" alt="" class="train-car" />
+            <img
+                src="images/train/Locomotive.png"
+                alt=""
+                class="train-car locomotive"
+            />
+        </div>
+
+        <!-- D3 + charts -->
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+
+        <!-- Maps -->
+        <script src="js/charts/bikes-map.js"></script>
+        <script src="js/charts/taxis-map.js"></script>
+        <script src="js/charts/buses-map.js"></script>
+        <script src="js/charts/subway-map.js"></script>
+        <script src="js/charts/walking-map.js"></script>
+
+        <!-- Analytics / usage charts -->
+        <script src="js/charts/transport-usage.js"></script>
+        <script src="js/charts/how-people-move.js"></script>
+
+        <!-- Main site script -->
+        <script src="js/main.js"></script>
+    </body>
+</html>

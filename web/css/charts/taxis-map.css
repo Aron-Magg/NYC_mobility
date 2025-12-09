@@ -1,0 +1,60 @@
+/* ========================================
+   TAXIS MAP
+   ======================================== */
+
+/* Wrapper around the taxis map card (extends .map-card) */
+.taxis-map-wrapper {
+    margin: 24px 0 32px;
+}
+
+/* Title above the taxis map */
+.taxis-map-title {
+    font-family: "ConsolasBold", monospace;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #f2f3f4;
+    margin-bottom: 12px;
+}
+
+/* Container where D3 injects the SVG */
+.taxis-map {
+    width: 100%;
+    height: auto;
+}
+
+/* Responsive SVG */
+.taxis-map svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Borough polygons */
+.taxis-map__borough {
+    fill: #3a3a3a; /* neutral dark grey */
+    stroke: #101010;
+    stroke-width: 0.8;
+    opacity: 0.9;
+}
+
+/* Taxi / for-hire vehicle points */
+.taxis-map__vehicle {
+    fill: #ffd447; /* taxi yellow */
+    stroke: #8a6b00;
+    stroke-width: 0.5;
+    opacity: 0.85;
+}
+
+/* Hover effect on boroughs (optional) */
+.taxis-map__borough:hover {
+    fill: #555555;
+}
+
+/* Error message if data fails to load */
+.taxis-map__error {
+    color: #ffb3b3;
+    font-size: 14px;
+    font-style: italic;
+    margin: 8px 0 0;
+}

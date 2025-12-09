@@ -1,0 +1,307 @@
+/* ========================================
+   TRANSPORT USAGE CARD (LINE + SETTINGS + PIES)
+   ======================================== */
+
+/* Outer card wrapping line chart, settings and pies */
+.transport-usage-card {
+    margin: 32px 0;
+    padding: 16px 20px;
+    border-radius: 16px;
+
+    background: rgba(15, 15, 15, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* ========================================
+   TOP ROW: LINE CHART + SETTINGS
+   ======================================== */
+
+.transport-usage-card__top {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;
+}
+
+/* Line chart container */
+.transport-usage-card__line {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 300px;
+
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.4);
+
+    padding: 4px 4px 0 4px; /* spazio per il titolo in alto */
+}
+
+/* SVG full-size inside the line chart box */
+.transport-usage-card__line svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Small title inside the line chart (top-right) */
+.transport-usage-line__title {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    font-family: "ConsolasBold", monospace;
+    font-size: 12px;
+    color: #f2f3f4;
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+/* Settings panel on the right */
+.transport-usage-card__settings {
+    flex: 0 0 260px;
+    font-family: var(
+        --font-sans,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif
+    );
+    color: #f2f3f4;
+}
+
+.transport-usage-card__settings fieldset {
+    height: 100%;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 4px 14px 4px;
+
+    /* 10px totale più corto del grafico a linea */
+    margin: -10px 0;
+
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.transport-usage-card__settings legend {
+    font-family: "ConsolasBold", monospace;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0 4px;
+}
+
+/* Generic field block: label + input */
+.transport-usage-card__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 14px;
+}
+
+/* Label text */
+.transport-usage-card__field label,
+.transport-usage-card__field-title {
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+/* Inputs */
+.transport-usage-card__field input[type="date"],
+.transport-usage-card__field select {
+    padding: 4px 6px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(10, 10, 10, 0.9);
+    color: #f2f3f4;
+    font-size: 13px;
+}
+
+/* Color theme radio options */
+.transport-usage-card__color-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.transport-usage-card__color-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.transport-usage-card__color-option input {
+    cursor: pointer;
+}
+
+/* Small color swatch */
+.transport-usage-card__color-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 0, 0, 0.7);
+}
+
+/* Example color themes */
+.transport-usage-card__color-swatch--green {
+    background: #1ad15b;
+}
+.transport-usage-card__color-swatch--blue {
+    background: #00e5ff;
+}
+.transport-usage-card__color-swatch--magenta {
+    background: #ff3bff;
+}
+
+/* ========================================
+   BOTTOM ROW: FOUR PIE CHARTS
+   ======================================== */
+
+.transport-usage-card__pies {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+/* Container for one pie + legend */
+.transport-usage-card__pie {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Box that contains the pie chart itself */
+.transport-usage-card__pie-chart-wrapper {
+    position: relative;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px;
+}
+
+/* Title inside the pie box, top-right */
+.transport-usage-card__pie-title {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-family: "ConsolasBold", monospace;
+    font-size: 11px;
+    color: #f2f3f4;
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+/* Area reserved for the pie SVG – square */
+.transport-usage-card__pie-chart {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+}
+
+/* SVG fills the pie chart area */
+.transport-usage-card__pie-chart svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Legend box below each pie */
+.transport-usage-card__pie-legend {
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 6px 8px;
+    font-family: var(
+        --font-sans,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif
+    );
+    font-size: 11px;
+    color: #e0e0e0;
+}
+
+/* One legend row */
+.transport-usage-card__pie-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 2px;
+}
+
+/* Color dot in the legend */
+.transport-usage-card__pie-legend-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+}
+
+/* ========================================
+   RESPONSIVE BEHAVIOUR
+   ======================================== */
+
+@media (max-width: 1000px) {
+    .transport-usage-card__top {
+        flex-direction: column;
+    }
+
+    .transport-usage-card__settings {
+        flex: 0 0 auto;
+    }
+}
+
+@media (max-width: 700px) {
+    .transport-usage-card__pies {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .transport-usage-card__pies {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ========================================
+   LINE CHART STYLING
+   ======================================== */
+
+.transport-usage-line__axis path,
+.transport-usage-line__axis line {
+    stroke: rgba(255, 255, 255, 0.35);
+}
+
+.transport-usage-line__axis text {
+    fill: #e0e0e0;
+    font-size: 11px;
+}
+
+.transport-usage-line__path {
+    fill: none;
+    stroke: #1ad15b;
+    stroke-width: 2;
+}
+
+/* ========================================
+   PIE TOOLTIP
+   ======================================== */
+
+.transport-usage-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.9);
+    color: #f2f3f4;
+    padding: 6px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 11px;
+    z-index: 9999;
+    opacity: 0;
+}

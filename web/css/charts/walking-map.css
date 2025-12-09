@@ -1,0 +1,47 @@
+/* ========================================
+   WALKING MAP
+   ======================================== */
+
+.walking-map-wrapper {
+    margin: 24px 0 32px;
+}
+
+.walking-map-title {
+    font-family: "ConsolasBold", monospace;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #f2f3f4;
+    margin-bottom: 12px;
+}
+
+.walking-map {
+    width: 100%;
+    height: auto;
+}
+
+.walking-map svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Borough polygons only (no points for now) */
+.walking-map__borough {
+    fill: #0f7c3b; /* walking / park green */
+    stroke: #101010;
+    stroke-width: 0.8;
+    opacity: 0.9;
+}
+
+/* Hover */
+.walking-map__borough:hover {
+    fill: #1ad15b;
+}
+
+.walking-map__error {
+    color: #ffb3b3;
+    font-size: 14px;
+    font-style: italic;
+    margin: 8px 0 0;
+}

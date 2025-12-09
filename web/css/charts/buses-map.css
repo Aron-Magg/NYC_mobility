@@ -1,0 +1,55 @@
+/* ========================================
+   BUSES MAP
+   ======================================== */
+
+.buses-map-wrapper {
+    margin: 24px 0 32px;
+}
+
+.buses-map-title {
+    font-family: "ConsolasBold", monospace;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #f2f3f4;
+    margin-bottom: 12px;
+}
+
+.buses-map {
+    width: 100%;
+    height: auto;
+}
+
+.buses-map svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Borough polygons */
+.buses-map__borough {
+    fill: #0b3c5d; /* deep blue */
+    stroke: #101010;
+    stroke-width: 0.8;
+    opacity: 0.9;
+}
+
+/* Bus stops */
+.buses-map__stop {
+    fill: #00bfff; /* light blue */
+    stroke: #003f5c;
+    stroke-width: 0.5;
+    opacity: 0.9;
+}
+
+/* Hover effect */
+.buses-map__borough:hover {
+    fill: #1167a8;
+}
+
+.buses-map__error {
+    color: #ffb3b3;
+    font-size: 14px;
+    font-style: italic;
+    margin: 8px 0 0;
+}

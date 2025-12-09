@@ -1,0 +1,36 @@
+/* ========================================
+   BIKES MAP – GEOMETRY STYLES
+   ======================================== */
+
+/* NYC borough polygons (bikes theme) */
+.bikes-map__borough {
+    fill: #0f7c3b; /* bike-themed green */
+    stroke: #101010;
+    stroke-width: 0.8;
+    opacity: 0.85;
+    transition:
+        fill 0.2s ease,
+        opacity 0.2s ease;
+}
+
+/* Hover effect on boroughs */
+.bikes-map__borough:hover {
+    fill: #1ad15b;
+    opacity: 1;
+}
+
+/* Bike shelter points */
+.bikes-map__station {
+    fill: #00e5ff; /* bright cyan dots */
+    stroke: #001519;
+    stroke-width: 0.4;
+    opacity: 0.9;
+}
+
+/* Error message if data fails to load */
+.bikes-map__error {
+    color: #ffb3b3;
+    font-size: 14px;
+    font-style: italic;
+    margin: 8px 0 0;
+}

@@ -1,0 +1,455 @@
+/* ========================================
+   FONT EMBEDDING
+   ======================================== */
+
+@font-face {
+    font-family: "ConsolasBold";
+    src: url("../fonts/Consolas-Font/CONSOLAB.TTF") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* ========================================
+   CSS CUSTOM PROPERTIES
+   ======================================== */
+
+:root {
+    --font-sans:
+        system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        sans-serif;
+}
+
+/* ========================================
+   GLOBAL LAYOUT & TYPOGRAPHY
+   ======================================== */
+
+html {
+    background: #2f3030; /* dark fallback behind the body */
+    overscroll-behavior: none; /* disable rubber-band on root scroller */
+}
+
+body {
+    /* IMPORTANT: remove default margin, use padding to shift content right */
+    margin: 0;
+    padding-left: 220px; /* was margin-left: 220px */
+
+    overscroll-behavior: none; /* no elastic overscroll in Firefox */
+
+    /* Background: dark overlay + subway map image */
+    background:
+        linear-gradient(#2f3030fa, /* semi-opaque dark overlay */ #2f3030fa),
+        url("../images/backgrounds/SubwayMapNYC_Large.jpg") center / cover
+            no-repeat fixed;
+}
+
+main {
+    max-width: 1600px;
+    margin: 40px auto;
+    padding: 0 40px;
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 1.6;
+    color: #111;
+}
+
+/* Main page title */
+main h1 {
+    font-family: "ConsolasBold", monospace;
+    font-size: 60px;
+    color: #f2f3f4;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+/* Chapter subtitles (legacy style, currently not used) */
+/*
+main h2 {
+  font-family: "ConsolasBold", monospace;
+  font-size: 42px;
+  margin-top: 48px;
+  margin-bottom: 12px;
+  color: #f2f3f4;
+}
+*/
+
+/* Generic paragraph text inside main */
+main p {
+    margin-bottom: 12px;
+    color: #f2f3f4;
+}
+
+/* ========================================
+   SIDEBAR LAYOUT & STYLES
+   ======================================== */
+
+/* Outer sidebar container (fixed on the left) */
+.side-bar-outer {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    bottom: 8px;
+    width: 180px;
+
+    background: #100c08;
+    border-radius: 28px;
+    box-sizing: border-box;
+
+    padding: 16px 0 8px 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    /* Softer shadow around sidebar */
+    box-shadow: 0 8px 24px rgba(7, 1, 70, 0.2);
+}
+
+/* Clickable link that wraps the "NYC" title */
+.side-bar-outer > a {
+    text-decoration: none;
+}
+
+/* "NYC" title inside the sidebar */
+.side-bar-title {
+    color: #f2f3f4;
+    font-family: "ConsolasBold", monospace;
+    font-size: 50px;
+    font-weight: 700;
+
+    width: 150px;
+    margin-left: 8px;
+    margin-bottom: 16px;
+    text-align: center;
+
+    padding: 4px 8px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+/* Hover effect on the "NYC" title */
+.side-bar-title:hover {
+    background-color: #1c1c1c4d;
+    color: #343434;
+}
+
+/* Inner sidebar panel (timeline rail + labels) */
+.side-bar {
+    position: relative;
+    width: 154px;
+
+    /* Takes remaining vertical space with a left offset */
+    flex: 1 1 auto;
+    margin: 0 0 0px 8px;
+
+    background: #343434;
+    border-radius: 20px;
+    padding: 40px 10px 40px 70px;
+    box-sizing: border-box;
+}
+
+/* External path bar (main vertical rail) */
+.side-bar::before {
+    content: "";
+    position: absolute;
+    top: 50px;
+    bottom: 50px;
+    left: 30px;
+    width: 12px;
+    background-color: #343434; /* use #f2f3f4 to show outer rail */
+    border-radius: 999px;
+    z-index: 1;
+}
+
+/* Internal path bar (inner contrasting rail) */
+.side-bar::after {
+    content: "";
+    position: absolute;
+    top: 52px;
+    bottom: 52px;
+    left: 33px;
+    width: 6px;
+
+    background-color: #f2f3f4; /* use #343434 to swap contrast */
+    border-radius: 999px;
+    z-index: 3;
+}
+
+/* ========================================
+   SIDEBAR MENU DOTS & LINKS
+   ======================================== */
+
+/* Menu list in the sidebar */
+.menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Each menu item wrapper */
+.menu li {
+    position: relative;
+}
+
+/* Outer white circle ("station" dot) */
+.menu li::before {
+    content: "";
+    position: absolute;
+    left: -34px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #f2f3f4;
+    z-index: 2;
+}
+
+/* Inner dark circle inside the dot */
+.menu li::after {
+    content: "";
+    position: absolute;
+    left: -34px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #343434;
+    z-index: 4;
+}
+
+/* First and last dots: larger outer circle */
+.menu li:first-child::before,
+.menu li:last-child::before {
+    width: 30px;
+    height: 30px;
+}
+
+/* First and last dots: larger inner circle */
+.menu li:first-child::after,
+.menu li:last-child::after {
+    width: 15px;
+    height: 15px;
+}
+
+/* Text label for each menu item */
+.menu a {
+    position: relative;
+    text-decoration: none;
+    color: #f2f3f4;
+    font-family: "ConsolasBold", monospace;
+    font-size: 15px;
+
+    display: inline-block;
+    width: 80px;
+    text-align: center;
+
+    margin-left: -16px;
+
+    /* Slight padding and rounded corners for hover highlight */
+    padding: 4px 8px;
+    border-radius: 12px;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+/* Hover state: soft white highlight */
+.menu a:hover {
+    background-color: #f2f3f44d;
+    color: #343434;
+}
+
+/* Red indicator dot showing current section */
+.menu-indicator {
+    position: absolute;
+    left: 36px;
+    transform: translate(-50%, -50%);
+
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+
+    background: #ff3b3b;
+    box-shadow: 0 0 8px rgba(255, 59, 59, 0.8);
+
+    z-index: 5;
+    top: 50px;
+    /* Smooth movement can be enabled with:
+     transition: top 0.3s ease-out; */
+}
+
+/* ========================================
+   FOOTER
+   ======================================== */
+
+.main-footer {
+    width: 100%;
+    margin: 20px auto 8px;
+    padding: 20px 0;
+
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.4;
+
+    background-color: #100c08;
+    color: #f2f3f4;
+
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(7, 1, 70, 0.2);
+}
+
+/* ========================================
+   CHAPTER LAYOUT (TITLE + RED BRACKET)
+   ======================================== */
+
+/* Chapter container */
+.chapter {
+    margin: 72px 0;
+    position: relative;
+    font-family: var(--font-sans);
+}
+
+/* Chapter title line, aligned left */
+.chapter-heading {
+    margin: 0 0 8px 0;
+    text-align: left;
+}
+
+/* Chapter title text */
+.chapter-heading span {
+    display: inline-block;
+    padding: 0;
+    border: none;
+    background: transparent;
+
+    font-family: "ConsolasBold", monospace;
+    font-size: 42px;
+    margin-top: 48px;
+    color: #f2f3f4;
+}
+
+/* Grid layout below title: red bracket + text */
+.chapter-layout {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr); /* left bracket + content */
+    column-gap: 10px; /* keeps text close to line */
+    margin-top: 4px;
+}
+
+/* Column that holds the red bracket/curve */
+.chapter-bracket {
+    position: relative;
+    left: 4px;
+}
+
+/* Red vertical line with a rounded end at the bottom */
+.chapter-bracket::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    top: 0; /* starts right under the title */
+    height: 100%; /* follows the whole chapter content */
+    width: 20px; /* length of the bottom horizontal part */
+
+    border-left: 4px solid #e53935;
+    border-bottom: 4px solid #e53935;
+    border-bottom-left-radius: 24px;
+    box-sizing: border-box;
+}
+
+/* Chapter content: plain text, no box */
+.chapter-box {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+}
+
+/* Paragraph spacing inside chapter content */
+.chapter-box p {
+    margin-bottom: 12px;
+}
+
+/* ========================================
+   EASTER EGG: TRAIN ANIMATION
+   ======================================== */
+
+/* Container for the little train crossing the screen */
+.easter-train {
+    position: fixed;
+    left: 0;
+    bottom: 40px; /* distance from bottom of the viewport */
+    display: flex;
+    align-items: flex-end;
+    gap: 0;
+
+    pointer-events: none; /* do not block click interactions */
+    z-index: 9999; /* always on top */
+
+    transform: translateX(-110vw); /* start off-screen to the left */
+    opacity: 0;
+}
+
+/* Each wagon / locomotive image */
+.easter-train img.train-car {
+    height: 80px; /* train size */
+    width: auto;
+    display: block;
+}
+
+/* Active state: make the train visible and animate it */
+.easter-train--active {
+    opacity: 1;
+    animation: train-run 5s linear forwards;
+}
+
+/* Keyframes for train movement: left to right across the viewport */
+@keyframes train-run {
+    from {
+        transform: translateX(-110vw);
+    }
+    to {
+        transform: translateX(110vw);
+    }
+}
+
+/* ========================================
+   LINK RESET (NO UNDERLINES)
+   ======================================== */
+
+/* Remove underline and focus outlines for sidebar menu links in all states */
+.menu a,
+.menu a:link,
+.menu a:visited,
+.menu a:hover,
+.menu a:active,
+.menu a:focus,
+.menu a:focus-visible {
+    text-decoration: none !important;
+    outline: none;
+}
+
+/* Remove underline and focus outlines for the clickable "NYC" title link */
+.side-bar-outer > a,
+.side-bar-outer > a:link,
+.side-bar-outer > a:visited,
+.side-bar-outer > a:hover,
+.side-bar-outer > a:active,
+.side-bar-outer > a:focus,
+.side-bar-outer > a:focus-visible {
+    text-decoration: none !important;
+    outline: none;
+}

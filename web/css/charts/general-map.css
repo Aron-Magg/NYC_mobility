@@ -1,0 +1,106 @@
+/* ========================================
+   GENERIC MAP CARD LAYOUT
+   ======================================== */
+
+/* Card wrapper: map + controls */
+.map-card {
+  margin: 24px 0 32px;
+  padding: 12px 20px;
+  border-radius: 16px;
+
+  background: rgba(15, 15, 15, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* Title above the map */
+.map-card__title {
+  font-family: "ConsolasBold", monospace;
+  font-size: 24px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #f2f3f4;
+  margin-bottom: 12px;
+}
+
+/* ========================================
+   MAP AREA
+   ======================================== */
+
+/* Container where D3 injects the SVG */
+.map-card__map {
+  width: 100%;
+  height: auto;
+}
+
+/* Responsive SVG */
+.map-card__map svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ========================================
+   CONTROLS BELOW THE MAP
+   ======================================== */
+
+.map-card__controls {
+  margin-top: 16px;
+  max-width: 180px;
+
+  font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", Roboto, sans-serif);
+  color: #f2f3f4;
+}
+
+/* Group of radio buttons */
+.map-card__controls fieldset {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 10px 14px 12px;
+  margin: 0;
+
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Legend/title of the controls block */
+.map-card__controls legend {
+  font-family: "ConsolasBold", monospace;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0 4px;
+  color: #f2f3f4;
+}
+
+/* Row: radio input + label text */
+.map-card__controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Radio input styling */
+.map-card__controls input[type="radio"] {
+  cursor: pointer;
+  accent-color: #1ad15b;
+}
+
+/* Hover feedback on label text */
+.map-card__controls label:hover {
+  color: #1ad15b;
+}
+
+/* On small screens, let the controls use full width */
+@media (max-width: 900px) {
+  .map-card__controls {
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,63 @@
+/* ========================================
+   SUBWAY MAP
+   ======================================== */
+
+.subway-map-wrapper {
+    margin: 24px 0 32px;
+}
+
+.subway-map-title {
+    font-family: "ConsolasBold", monospace;
+    font-size: 24px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #f2f3f4;
+    margin-bottom: 12px;
+}
+
+.subway-map {
+    width: 100%;
+    height: auto;
+}
+
+.subway-map svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Borough polygons */
+.subway-map__borough {
+    fill: #222222;
+    stroke: #101010;
+    stroke-width: 0.8;
+    opacity: 0.9;
+}
+
+/* Subway stations */
+.subway-map__station {
+    fill: #ff3bff; /* magenta */
+    stroke: #5a005a;
+    stroke-width: 0.5;
+    opacity: 0.9;
+}
+
+/* Subway entrances (optional, smaller) */
+.subway-map__entrance {
+    fill: #00e5ff;
+    stroke: #004f59;
+    stroke-width: 0.4;
+    opacity: 0.85;
+}
+
+/* Hover effect */
+.subway-map__borough:hover {
+    fill: #333333;
+}
+
+.subway-map__error {
+    color: #ffb3b3;
+    font-size: 14px;
+    font-style: italic;
+    margin: 8px 0 0;
+}
