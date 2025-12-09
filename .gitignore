@@ -51,3 +51,4 @@ Thumbs.db
 # If *all* your CSVs are generated or downloaded and you never want to track them,
 # you can uncomment the next line. Otherwise, keep it commented.
 # *.csv
+data/processed/
