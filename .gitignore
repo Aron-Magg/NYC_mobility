@@ -1,1 +1,53 @@
-Datasets/tripdata/
+# ============================================
+# NYC_mobility - .gitignore
+# Aligned with Utilities/clean.sh
+# ============================================
+
+# --- Python bytecode / caches (clean.sh also removes these) ---
+__pycache__/
+*.pyc
+*.pyo
+*$py.class
+
+# --- Virtual environments (clean.sh removes root .venv) ---
+/.venv/
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# --- Jupyter (clean.sh removes these dirs) ---
+.ipynb_checkpoints/
+
+# --- Test / tooling caches (in case you add them later) ---
+.pytest_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# --- IDE / editor / OS noise ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+*.DS_Store
+Thumbs.db
+
+# --- Local environment / secrets (if you add them) ---
+.env
+.env.*
+*.env
+*.local
+*.secret
+
+# --- Project-specific data ---
+# Raw/downloaded trip data – reproducible via Utilities/download_datasets.py
+# Datasets/tripdata/
+
+# If *all* your CSVs are generated or downloaded and you never want to track them,
+# you can uncomment the next line. Otherwise, keep it commented.
+# *.csv
