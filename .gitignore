@@ -5,12 +5,10 @@
 
 # --- Python bytecode / caches (clean.sh also removes these) ---
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
 *$py.class
 
 # --- Virtual environments (clean.sh removes root .venv) ---
-/.venv/
 .venv/
 venv/
 env/
@@ -18,37 +16,78 @@ ENV/
 env.bak/
 venv.bak/
 
-# --- Jupyter (clean.sh removes these dirs) ---
-.ipynb_checkpoints/
-
-# --- Test / tooling caches (in case you add them later) ---
+# --- Python tooling caches ---
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
+.pyre/
+.pytype/
+.cache/
 .coverage
 coverage.xml
 htmlcov/
 
+# --- Jupyter / notebooks ---
+.ipynb_checkpoints/
+*.ipynb~
+
+# --- Build / packaging artifacts ---
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+*.whl
+
+# --- Logs / temp ---
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
 # --- IDE / editor / OS noise ---
 .vscode/
 .idea/
-*.swp
-*.swo
-*.tmp
-*.DS_Store
+.DS_Store
 Thumbs.db
 
-# --- Local environment / secrets (if you add them) ---
+# --- Local environment / secrets ---
 .env
 .env.*
 *.env
 *.local
 *.secret
+*.key
+*.pem
 
-# --- Project-specific data ---
-# Raw/downloaded trip data – reproducible via Utilities/download_datasets.py
-# Datasets/tripdata/
+# --- Other tools ---
+.showignore
+codes_list_merged.txt
+show_all.py
 
-# If *all* your CSVs are generated or downloaded and you never want to track them,
-# you can uncomment the next line. Otherwise, keep it commented.
-# *.csv
+
+# --- Data artifacts (generated) ---
 data/processed/
+
+# Optional: raw/downloaded data (uncomment if you never want to track it)
+# data/raw/
+# data/tripdata/
+# *.csv
+
+# --- Frontend / web toolchains (safe even if you don't use them now) ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.vite/
+.parcel-cache/
+.next/
+out/
+.cache-loader/
+
+# --- Misc ---
+*.sqlite
+*.sqlite3
+.DIR
