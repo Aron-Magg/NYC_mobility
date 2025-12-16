@@ -182,7 +182,7 @@ main p {
     left: var(--track-left);
     right: var(--track-right);
 
-    bottom: calc(var(--rail-center) - 6px); /* 12px/2 */
+    bottom: calc(var(--rail-center) + 57px);
     height: 12px;
 
     background-color: #343434;
