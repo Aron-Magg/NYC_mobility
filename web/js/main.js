@@ -4,7 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
      ======================================== */
 
   // How far from the top of the viewport the chapter title should land
-  const TOP_OFFSET = 10; // px
+  const BASE_OFFSET = 10; // px extra sotto la navbar
+
+  const navOuter = document.querySelector(".side-bar-outer");
+  function getTopOffset() {
+    if (!navOuter) return BASE_OFFSET;
+    return navOuter.getBoundingClientRect().height + BASE_OFFSET;
+  }
+
 
   // Time window for the easter egg clicks (in ms)
   const CLICK_WINDOW = 2000;
@@ -97,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const elementPosition = getDocumentY(anchor);
 
           // We want the anchor to end up TOP_OFFSET px from the top of the viewport
-          const offsetPosition = elementPosition - TOP_OFFSET;
+          const offsetPosition = elementPosition - getTopOffset();
 
           // Clamp target scroll so we never go beyond [0, maxScroll]
           const maxScroll = Math.max(
@@ -150,57 +157,49 @@ document.addEventListener("DOMContentLoaded", () => {
    * of the viewport.
    */
   function updateIndicator() {
-    if (!indicator || !sidebar || items.length === 0) return;
+  if (!indicator || !sidebar || items.length === 0) return;
 
-    const sidebarRect = sidebar.getBoundingClientRect();
+  const barRect = sidebar.getBoundingClientRect();
 
-    // Focus line: TOP_OFFSET px from the top of the viewport
-    const focusY = getScrollY() + TOP_OFFSET;
+  // Focus line: appena sotto la navbar fissa
+  const focusY = getScrollY() + getTopOffset();
 
-    // Document Y positions of each section anchor (<h2> or section)
-    const anchorPositions = items.map((item) => getDocumentY(item.anchor));
+  const anchorPositions = items.map((item) => getDocumentY(item.anchor));
 
-    // Vertical centers of each <li> within the sidebar's coordinate system
-    const liCenters = items.map((item) => {
-      const liRect = item.li.getBoundingClientRect();
-      const centerY = liRect.top + liRect.height / 2;
-      return centerY - sidebarRect.top;
-    });
+  // Centri X di ogni <li> rispetto alla barra (coordinate locali)
+  const liCentersX = items.map((item) => {
+    const liRect = item.li.getBoundingClientRect();
+    const centerX = liRect.left + liRect.width / 2;
+    return centerX - barRect.left;
+  });
 
-    let topPos;
+  let leftPos;
 
-    // Before the first section → pin indicator to the first dot
-    if (focusY <= anchorPositions[0]) {
-      topPos = liCenters[0];
-    }
-    // After the last section → pin indicator to the last dot
-    else if (focusY >= anchorPositions[anchorPositions.length - 1]) {
-      topPos = liCenters[liCenters.length - 1];
-    }
-    // In between → interpolate between section i and i+1
-    else {
-      let idx = 0;
-
-      // Find the segment [i, i+1] where focusY lies
-      for (let i = 0; i < anchorPositions.length - 1; i++) {
-        if (focusY >= anchorPositions[i] && focusY <= anchorPositions[i + 1]) {
-          idx = i;
-          break;
-        }
+  if (focusY <= anchorPositions[0]) {
+    leftPos = liCentersX[0];
+  } else if (focusY >= anchorPositions[anchorPositions.length - 1]) {
+    leftPos = liCentersX[liCentersX.length - 1];
+  } else {
+    let idx = 0;
+    for (let i = 0; i < anchorPositions.length - 1; i++) {
+      if (focusY >= anchorPositions[i] && focusY <= anchorPositions[i + 1]) {
+        idx = i;
+        break;
       }
-
-      const y0 = anchorPositions[idx];
-      const y1 = anchorPositions[idx + 1];
-      const t = (focusY - y0) / (y1 - y0); // progression between section i and i+1 (0 → 1)
-
-      const p0 = liCenters[idx];
-      const p1 = liCenters[idx + 1];
-
-      topPos = p0 + (p1 - p0) * t;
     }
 
-    indicator.style.top = `${topPos}px`;
+    const y0 = anchorPositions[idx];
+    const y1 = anchorPositions[idx + 1];
+    const t = (focusY - y0) / (y1 - y0);
+
+    const p0 = liCentersX[idx];
+    const p1 = liCentersX[idx + 1];
+
+    leftPos = p0 + (p1 - p0) * t;
   }
+
+  indicator.style.left = `${leftPos}px`;
+}
 
   /* ========================================
      INITIALIZATION & EVENT BINDINGS

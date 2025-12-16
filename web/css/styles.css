@@ -28,19 +28,28 @@ html {
     overscroll-behavior: none; /* disable rubber-band on root scroller */
 }
 
+:root {
+    --nav-height: 96px;
+    --nav-gap: 16px; /* spazio extra tra navbar e contenuto */
+}
+
 body {
-    /* IMPORTANT: remove default margin, use padding to shift content right */
     margin: 0;
-    padding-left: 220px; /* was margin-left: 220px */
 
-    overscroll-behavior: none; /* no elastic overscroll in Firefox */
+    /* prima era padding-left: 220px; (sidebar a sinistra) */
+    padding-left: 0;
 
-    /* Background: dark overlay + subway map image */
+    /* spazio per la topbar fissa */
+    padding-top: calc(var(--nav-height) + var(--nav-gap));
+
+    overscroll-behavior: none;
+
     background:
-        linear-gradient(#2f3030fa, /* semi-opaque dark overlay */ #2f3030fa),
+        linear-gradient(#2f3030fa, #2f3030fa),
         url("../images/backgrounds/SubwayMapNYC_Large.jpg") center / cover
             no-repeat fixed;
 }
+
 
 main {
     max-width: 1600px;
@@ -79,169 +88,196 @@ main p {
 }
 
 /* ========================================
-   SIDEBAR LAYOUT & STYLES
+   TOP NAV (ex SIDEBAR) – HORIZONTAL
    ======================================== */
 
-/* Outer sidebar container (fixed on the left) */
 .side-bar-outer {
     position: fixed;
     top: 8px;
     left: 8px;
-    bottom: 8px;
-    width: 180px;
+    right: 8px;
+
+    height: var(--nav-height);
+    width: auto;
+    bottom: auto;
 
     background: #100c08;
     border-radius: 28px;
     box-sizing: border-box;
 
-    padding: 16px 0 8px 0;
-
+    padding: 12px 16px;
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
 
-    /* Softer shadow around sidebar */
     box-shadow: 0 8px 24px rgba(7, 1, 70, 0.2);
+    z-index: 9998;
 }
 
-/* Clickable link that wraps the "NYC" title */
-.side-bar-outer > a {
-    text-decoration: none;
-}
-
-/* "NYC" title inside the sidebar */
 .side-bar-title {
     color: #f2f3f4;
     font-family: "ConsolasBold", monospace;
-    font-size: 50px;
+    font-size: 44px;
     font-weight: 700;
 
-    width: 150px;
-    margin-left: 8px;
-    margin-bottom: 16px;
-    text-align: center;
-
-    padding: 4px 8px;
+    width: auto;
+    margin: 0;
+    padding: 6px 10px;
     border-radius: 16px;
+
     cursor: pointer;
-    transition:
-        background-color 0.2s ease,
-        color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Hover effect on the "NYC" title */
 .side-bar-title:hover {
     background-color: #1c1c1c4d;
     color: #343434;
 }
 
-/* Inner sidebar panel (timeline rail + labels) */
+/* il “binario” + menu */
 .side-bar {
     position: relative;
-    width: 154px;
-
-    /* Takes remaining vertical space with a left offset */
     flex: 1 1 auto;
-    margin: 0 0 0px 8px;
+    height: 100%;
+    width: auto;
 
+    margin: 0;
     background: #343434;
     border-radius: 20px;
-    padding: 40px 10px 40px 70px;
     box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+
+    /* manopole */
+    --rail-center: -40px;   /* ↓ più piccolo = pallini/rail PIÙ in basso */
+    --label-shift: 10px;   /* ↑ più grande = scritte PIÙ in basso */
+
+    /* spazio sotto per non tagliare pallini/indicatore */
+    padding: 12px 16px 64px 16px;
+
+    /* quanto rientra la linea (e anche il menu) dai lati */
+    --track-inset: 56px;
+
+    /* posizione "centro" del pallino rosso (in altezza) */
+    --indicator-center: calc(var(--rail-center) + 55px);
+
+    /* centro della linea bianca: più basso del pallino rosso */
+    --track-center: calc(var(--indicator-center) - 14px);
+
+    /* fallback se JS non gira */
+    --track-left: var(--track-inset);
+    --track-right: var(--track-inset);
+
+    /* quanto sta sopra la linea il pallino rosso (centro) */
+    --indicator-lift: 38px;
 }
 
-/* External path bar (main vertical rail) */
+/* rail orizzontale */
 .side-bar::before {
     content: "";
     position: absolute;
-    top: 50px;
-    bottom: 50px;
-    left: 30px;
-    width: 12px;
-    background-color: #343434; /* use #f2f3f4 to show outer rail */
+
+    left: var(--track-left);
+    right: var(--track-right);
+
+    bottom: calc(var(--rail-center) - 6px); /* 12px/2 */
+    height: 12px;
+
+    background-color: #343434;
     border-radius: 999px;
     z-index: 1;
+    top: auto;
 }
 
-/* Internal path bar (inner contrasting rail) */
 .side-bar::after {
     content: "";
     position: absolute;
-    top: 52px;
-    bottom: 52px;
-    left: 33px;
-    width: 6px;
 
-    background-color: #f2f3f4; /* use #343434 to swap contrast */
+    left: calc(var(--track-left) + 3px);
+    right: calc(var(--track-right) + 3px);
+
+    bottom: calc(var(--rail-center) + 60px); /* 6px/2 */
+    height: 6px;
+
+    background-color: #f2f3f4;
     border-radius: 999px;
     z-index: 3;
+    top: auto;
 }
 
-/* ========================================
-   SIDEBAR MENU DOTS & LINKS
-   ======================================== */
 
-/* Menu list in the sidebar */
+/* menu orizzontale */
 .menu {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 0 0;
 
     position: relative;
+    width: 100%;
     height: 100%;
+
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
+    gap: 100px;
 }
 
-/* Each menu item wrapper */
 .menu li {
     position: relative;
+    height: 100%;
+    flex: 1 1 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Outer white circle ("station" dot) */
+/* “station dots” sotto le label */
 .menu li::before {
     content: "";
     position: absolute;
-    left: -34px;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    left: 50%;
+    bottom: calc(var(--rail-center) - 10px);
+    transform: translateX(-50%);
     width: 20px;
     height: 20px;
     border-radius: 50%;
     background-color: #f2f3f4;
     z-index: 2;
+    top: auto;
 }
 
-/* Inner dark circle inside the dot */
 .menu li::after {
     content: "";
     position: absolute;
-    left: -34px;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    left: 50%;
+    bottom: calc(var(--rail-center) - 5px);
+    transform: translateX(-50%);
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background-color: #343434;
     z-index: 4;
+    top: auto;
 }
 
-/* First and last dots: larger outer circle */
 .menu li:first-child::before,
 .menu li:last-child::before {
     width: 30px;
     height: 30px;
+    bottom: calc(var(--rail-center) - 15px);
 }
 
-/* First and last dots: larger inner circle */
 .menu li:first-child::after,
 .menu li:last-child::after {
     width: 15px;
     height: 15px;
+    bottom: calc(var(--rail-center) - 8px);
 }
 
-/* Text label for each menu item */
 .menu a {
     position: relative;
     text-decoration: none;
@@ -250,44 +286,41 @@ main p {
     font-size: 15px;
 
     display: inline-block;
-    width: 80px;
+    width: auto;
     text-align: center;
 
-    margin-left: -16px;
-
-    /* Slight padding and rounded corners for hover highlight */
-    padding: 4px 8px;
+    margin: 0;
+    padding: 6px 10px;
     border-radius: 12px;
 
-    transition:
-        background-color 0.2s ease,
-        color 0.2s ease;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    transform: translateY(var(--label-shift));
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
-/* Hover state: soft white highlight */
 .menu a:hover {
     background-color: #f2f3f44d;
     color: #343434;
 }
 
-/* Red indicator dot showing current section */
+/* indicatore rosso: ora si muove in X (left) */
 .menu-indicator {
     position: absolute;
-    left: 36px;
-    transform: translate(-50%, -50%);
+    left: 16px;
+    bottom: calc(var(--rail-center) + 55px);
+    transform: translateX(-50%);
 
     width: 18px;
     height: 18px;
     border-radius: 50%;
-
     background: #ff3b3b;
     box-shadow: 0 0 8px rgba(255, 59, 59, 0.8);
-
     z-index: 5;
-    top: 50px;
-    /* Smooth movement can be enabled with:
-     transition: top 0.3s ease-out; */
+
+    transition: left 0.12s linear;
+    top: auto;
 }
+
 
 /* ========================================
    FOOTER
