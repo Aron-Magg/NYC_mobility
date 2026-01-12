@@ -1,7 +1,11 @@
 // js/charts/taxis-map.js
-// NYC boroughs + for-hire vehicles (taxis) map
-
+// NYC boroughs + for-hire vehicles map
 (async function initTaxisMap() {
+  if (typeof d3 === "undefined") {
+    console.error("D3 not found. Make sure d3.v7 is loaded before this script.");
+    return;
+  }
+
   const container = d3.select("#taxis-map");
   if (container.empty()) return;
 
@@ -14,7 +18,7 @@
     .attr("preserveAspectRatio", "xMidYMid meet");
 
   try {
-    const [boroughs, vehicles] = await Promise.all([
+    const [boroughs, fhv] = await Promise.all([
       d3.json("data/geo/nyc_boroughs.geojson"),
       d3.json("data/geo/for-hire-vehicles.geojson"),
     ]);
@@ -26,7 +30,6 @@
     const projection = d3.geoMercator().fitSize([width, height], boroughs);
     const path = d3.geoPath().projection(projection);
 
-    // Borough polygons
     svg
       .append("g")
       .selectAll("path")
@@ -35,42 +38,24 @@
       .attr("class", "taxis-map__borough")
       .attr("d", path);
 
-    // For-hire vehicle points (if data is present)
-    if (vehicles && Array.isArray(vehicles.features)) {
-      const pointFeatures = vehicles.features.filter(
-        (f) =>
-          f.geometry &&
-          f.geometry.type === "Point" &&
-          Array.isArray(f.geometry.coordinates),
-      );
-
+    if (fhv && Array.isArray(fhv.features)) {
       svg
         .append("g")
         .selectAll("circle")
-        .data(pointFeatures)
+        .data(fhv.features)
         .join("circle")
         .attr("class", "taxis-map__vehicle")
-        .attr("transform", (d) => {
-          const [x, y] = projection(d.geometry.coordinates);
-          return `translate(${x}, ${y})`;
-        })
-        .attr("r", 1.8);
+        .attr("cx", (d) => projection(d.geometry.coordinates)[0])
+        .attr("cy", (d) => projection(d.geometry.coordinates)[1])
+        .attr("r", 1.9)
+        .append("title")
+        .text("FHV / taxi punto");
     }
   } catch (err) {
     console.error("Error loading or rendering NYC taxis map:", err);
     container
       .append("p")
       .attr("class", "taxis-map__error")
-      .text("Unable to load taxis map data (check file paths and format).");
+      .text("Impossibile caricare la mappa taxi (controlla i file GeoJSON).");
   }
-
-  // Optional view options (if you add radios in the HTML)
-  const viewRadios = document.querySelectorAll('input[name="taxis-map-view"]');
-  viewRadios.forEach((radio) => {
-    radio.addEventListener("change", (event) => {
-      const value = event.target.value;
-      console.log("Selected taxis map view:", value);
-      // Here you can show/hide layers in the future
-    });
-  });
 })();

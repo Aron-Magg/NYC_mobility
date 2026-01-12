@@ -1,7 +1,11 @@
 // js/charts/subway-map.js
-// NYC boroughs + subway stations (and entrances) map
-
+// NYC boroughs + subway stations and entrances map
 (async function initSubwayMap() {
+  if (typeof d3 === "undefined") {
+    console.error("D3 not found. Make sure d3.v7 is loaded before this script.");
+    return;
+  }
+
   const container = d3.select("#subway-map");
   if (container.empty()) return;
 
@@ -27,7 +31,6 @@
     const projection = d3.geoMercator().fitSize([width, height], boroughs);
     const path = d3.geoPath().projection(projection);
 
-    // Boroughs
     svg
       .append("g")
       .selectAll("path")
@@ -36,62 +39,38 @@
       .attr("class", "subway-map__borough")
       .attr("d", path);
 
-    // Stations (bigger dots)
     if (stations && Array.isArray(stations.features)) {
-      const stationPoints = stations.features.filter(
-        (f) =>
-          f.geometry &&
-          f.geometry.type === "Point" &&
-          Array.isArray(f.geometry.coordinates),
-      );
-
       svg
         .append("g")
-        .selectAll("circle.station")
-        .data(stationPoints)
+        .selectAll("circle")
+        .data(stations.features)
         .join("circle")
         .attr("class", "subway-map__station")
-        .attr("transform", (d) => {
-          const [x, y] = projection(d.geometry.coordinates);
-          return `translate(${x}, ${y})`;
-        })
-        .attr("r", 2.5);
+        .attr("cx", (d) => projection(d.geometry.coordinates)[0])
+        .attr("cy", (d) => projection(d.geometry.coordinates)[1])
+        .attr("r", 2.5)
+        .append("title")
+        .text((d) => d.properties?.name || "Stazione metro");
     }
 
-    // Entrances (smaller dots)
     if (entrances && Array.isArray(entrances.features)) {
-      const entrancePoints = entrances.features.filter(
-        (f) =>
-          f.geometry &&
-          f.geometry.type === "Point" &&
-          Array.isArray(f.geometry.coordinates),
-      );
-
       svg
         .append("g")
-        .selectAll("circle.entrance")
-        .data(entrancePoints)
+        .selectAll("circle")
+        .data(entrances.features)
         .join("circle")
         .attr("class", "subway-map__entrance")
-        .attr("transform", (d) => {
-          const [x, y] = projection(d.geometry.coordinates);
-          return `translate(${x}, ${y})`;
-        })
-        .attr("r", 1.4);
+        .attr("cx", (d) => projection(d.geometry.coordinates)[0])
+        .attr("cy", (d) => projection(d.geometry.coordinates)[1])
+        .attr("r", 1.5)
+        .append("title")
+        .text("Ingresso metro");
     }
   } catch (err) {
     console.error("Error loading or rendering NYC subway map:", err);
     container
       .append("p")
       .attr("class", "subway-map__error")
-      .text("Unable to load subway map data (check file paths and format).");
+      .text("Impossibile caricare la mappa metro (controlla i file GeoJSON).");
   }
-
-  const viewRadios = document.querySelectorAll('input[name="subway-map-view"]');
-  viewRadios.forEach((radio) => {
-    radio.addEventListener("change", (event) => {
-      const value = event.target.value;
-      console.log("Selected subway map view:", value);
-    });
-  });
 })();

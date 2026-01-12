@@ -1,0 +1,90 @@
+/* ========================================
+   TRAFFIC CHAPTER
+   ======================================== */
+
+.traffic-card__line {
+    min-height: 320px;
+}
+
+.traffic-legend {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 10px;
+    margin-top: 8px;
+    font-size: 12px;
+}
+
+.traffic-legend__item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(242, 243, 244, 0.9);
+    font-family: "ConsolasBold", monospace;
+}
+
+.traffic-legend__swatch {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.traffic-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin: 24px 0;
+}
+
+.traffic-panel {
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: rgba(15, 15, 15, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.traffic-panel__title {
+    font-family: "ConsolasBold", monospace;
+    font-size: 12px;
+    color: #f2f3f4;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+}
+
+.traffic-panel__chart {
+    min-height: 260px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.4);
+    padding: 4px;
+}
+
+.traffic-panel__chart svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.traffic-axis-label {
+    fill: #f2f3f4;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.traffic-tooltip {
+    position: absolute;
+    pointer-events: none;
+    padding: 8px 10px;
+    background: rgba(12, 12, 12, 0.95);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #f2f3f4;
+    font-size: 12px;
+    font-family: "ConsolasBold", monospace;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 20;
+}

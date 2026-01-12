@@ -1,7 +1,11 @@
 // js/charts/buses-map.js
 // NYC boroughs + bus stops map
-
 (async function initBusesMap() {
+  if (typeof d3 === "undefined") {
+    console.error("D3 not found. Make sure d3.v7 is loaded before this script.");
+    return;
+  }
+
   const container = d3.select("#buses-map");
   if (container.empty()) return;
 
@@ -35,38 +39,23 @@
       .attr("d", path);
 
     if (busStops && Array.isArray(busStops.features)) {
-      const pointFeatures = busStops.features.filter(
-        (f) =>
-          f.geometry &&
-          f.geometry.type === "Point" &&
-          Array.isArray(f.geometry.coordinates),
-      );
-
       svg
         .append("g")
         .selectAll("circle")
-        .data(pointFeatures)
+        .data(busStops.features)
         .join("circle")
         .attr("class", "buses-map__stop")
-        .attr("transform", (d) => {
-          const [x, y] = projection(d.geometry.coordinates);
-          return `translate(${x}, ${y})`;
-        })
-        .attr("r", 1.8);
+        .attr("cx", (d) => projection(d.geometry.coordinates)[0])
+        .attr("cy", (d) => projection(d.geometry.coordinates)[1])
+        .attr("r", 1.3)
+        .append("title")
+        .text("Fermata bus");
     }
   } catch (err) {
-    console.error("Error loading or rendering NYC buses map:", err);
+    console.error("Error loading or rendering NYC bus map:", err);
     container
       .append("p")
       .attr("class", "buses-map__error")
-      .text("Unable to load buses map data (check file paths and format).");
+      .text("Impossibile caricare la mappa bus (controlla i file GeoJSON).");
   }
-
-  const viewRadios = document.querySelectorAll('input[name="buses-map-view"]');
-  viewRadios.forEach((radio) => {
-    radio.addEventListener("change", (event) => {
-      const value = event.target.value;
-      console.log("Selected buses map view:", value);
-    });
-  });
 })();

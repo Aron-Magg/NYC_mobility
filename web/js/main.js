@@ -4,14 +4,15 @@ document.addEventListener("DOMContentLoaded", () => {
      ======================================== */
 
   // How far from the top of the viewport the chapter title should land
-  const BASE_OFFSET = 10; // px extra sotto la navbar
+  const BASE_OFFSET = 10; // px extra below the fixed nav
 
-  const navOuter = document.querySelector(".side-bar-outer");
+  const navOuter = document.querySelector(".top-nav-outer");
   function getTopOffset() {
     if (!navOuter) return BASE_OFFSET;
-    return navOuter.getBoundingClientRect().height + BASE_OFFSET;
-  }
 
+    // Use "bottom" (not height) so we also account for the fixed top gap (e.g. top: 8px)
+    return navOuter.getBoundingClientRect().bottom + BASE_OFFSET;
+  }
 
   // Time window for the easter egg clicks (in ms)
   const CLICK_WINDOW = 2000;
@@ -22,10 +23,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const menuLinks = document.querySelectorAll(".menu a");
   const indicator = document.querySelector(".menu-indicator");
-  const sidebar = document.querySelector(".side-bar");
+  const navRail = document.querySelector(".top-nav"); // renamed selector (ex .side-bar)
   const train = document.getElementById("easter-train");
 
   const items = []; // will store { section, li, anchor }
+  let currentChapterIndex = -1;
 
   /* Helpers
      ======================================== */
@@ -45,6 +47,37 @@ document.addEventListener("DOMContentLoaded", () => {
   function getDocumentY(el) {
     const rect = el.getBoundingClientRect();
     return rect.top + getScrollY();
+  }
+
+  /**
+   * Keeps the rail endpoints anchored to the first/last menu items.
+   * This makes the "track" resilient under zoom and layout changes.
+   *
+   * It updates CSS variables used by .top-nav::before / ::after:
+   *   --track-left  (px from left edge)
+   *   --track-right (px from right edge)
+   */
+  function updateTrackBounds() {
+    if (!navRail || items.length === 0) return;
+
+    const barRect = navRail.getBoundingClientRect();
+
+    // First/last <li> centers relative to the rail
+    const firstLiRect = items[0].li.getBoundingClientRect();
+    const lastLiRect = items[items.length - 1].li.getBoundingClientRect();
+
+    const firstCenterX = firstLiRect.left + firstLiRect.width / 2 - barRect.left;
+    const lastCenterX = lastLiRect.left + lastLiRect.width / 2 - barRect.left;
+
+    // Small padding so the line doesn't look "cut" against the larger end dots
+    // (doesn't change style, it just keeps the endpoints stable with zoom)
+    const endPad = 15;
+
+    const left = Math.max(0, firstCenterX - endPad);
+    const right = Math.max(0, barRect.width - (lastCenterX + endPad));
+
+    navRail.style.setProperty("--track-left", `${left}px`);
+    navRail.style.setProperty("--track-right", `${right}px`);
   }
 
   /* ========================================
@@ -71,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ========================================
-     BUILD MENU → SECTION MAP & CLICK HANDLERS
+     BUILD MENU -> SECTION MAP & CLICK HANDLERS
      ======================================== */
 
   menuLinks.forEach((link) => {
@@ -84,6 +117,13 @@ document.addEventListener("DOMContentLoaded", () => {
       if (section && li) {
         // Use the internal <h2> as the visual anchor if present
         const anchor = section.querySelector("h2") || section;
+        if (!li.querySelector(".menu-time-row")) {
+          const timeRow = document.createElement("div");
+          timeRow.className = "menu-time-row";
+          timeRow.innerHTML =
+            "<span class=\"menu-time\"></span><span class=\"menu-delay\"></span>";
+          li.appendChild(timeRow);
+        }
         items.push({ section, li, anchor });
       }
     }
@@ -145,11 +185,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* ========================================
-     SCROLL INDICATOR (RED DOT ON THE SIDEBAR)
+     SCROLL INDICATOR (RED DOT ON THE TOP NAV)
      ======================================== */
 
   /**
-   * Updates the vertical position of the red indicator dot
+   * Updates the horizontal position of the red indicator dot
    * so that it matches the "current" section.
    *
    * The "current" section is defined as the last section whose
@@ -157,65 +197,213 @@ document.addEventListener("DOMContentLoaded", () => {
    * of the viewport.
    */
   function updateIndicator() {
-  if (!indicator || !sidebar || items.length === 0) return;
+    if (!indicator || !navRail || items.length === 0) return;
 
-  const barRect = sidebar.getBoundingClientRect();
+    const barRect = navRail.getBoundingClientRect();
 
-  // Focus line: appena sotto la navbar fissa
-  const focusY = getScrollY() + getTopOffset();
+    // Focus line: just below the fixed nav
+    const focusY = getScrollY() + getTopOffset();
 
-  const anchorPositions = items.map((item) => getDocumentY(item.anchor));
+    const anchorPositions = items.map((item) => getDocumentY(item.anchor));
 
-  // Centri X di ogni <li> rispetto alla barra (coordinate locali)
-  const liCentersX = items.map((item) => {
-    const liRect = item.li.getBoundingClientRect();
-    const centerX = liRect.left + liRect.width / 2;
-    return centerX - barRect.left;
-  });
+    // X centers of each <li> relative to the rail (local coordinates)
+    const liCentersX = items.map((item) => {
+      const liRect = item.li.getBoundingClientRect();
+      const centerX = liRect.left + liRect.width / 2;
+      return centerX - barRect.left;
+    });
 
-  let leftPos;
-
-  if (focusY <= anchorPositions[0]) {
-    leftPos = liCentersX[0];
-  } else if (focusY >= anchorPositions[anchorPositions.length - 1]) {
-    leftPos = liCentersX[liCentersX.length - 1];
-  } else {
+    let leftPos;
     let idx = 0;
-    for (let i = 0; i < anchorPositions.length - 1; i++) {
-      if (focusY >= anchorPositions[i] && focusY <= anchorPositions[i + 1]) {
-        idx = i;
-        break;
+
+    if (focusY <= anchorPositions[0]) {
+      leftPos = liCentersX[0];
+    } else if (focusY >= anchorPositions[anchorPositions.length - 1]) {
+      leftPos = liCentersX[liCentersX.length - 1];
+      idx = anchorPositions.length - 1;
+    } else {
+      for (let i = 0; i < anchorPositions.length - 1; i++) {
+        if (focusY >= anchorPositions[i] && focusY <= anchorPositions[i + 1]) {
+          idx = i;
+          break;
+        }
       }
+
+      const y0 = anchorPositions[idx];
+      const y1 = anchorPositions[idx + 1];
+      const t = (focusY - y0) / (y1 - y0);
+
+      const p0 = liCentersX[idx];
+      const p1 = liCentersX[idx + 1];
+
+      leftPos = p0 + (p1 - p0) * t;
     }
 
-    const y0 = anchorPositions[idx];
-    const y1 = anchorPositions[idx + 1];
-    const t = (focusY - y0) / (y1 - y0);
+    indicator.style.left = `${leftPos}px`;
 
-    const p0 = liCentersX[idx];
-    const p1 = liCentersX[idx + 1];
-
-    leftPos = p0 + (p1 - p0) * t;
+    if (idx !== currentChapterIndex) {
+      currentChapterIndex = idx;
+    }
+    updateSchedule(currentChapterIndex);
   }
-
-  indicator.style.left = `${leftPos}px`;
-}
 
   /* ========================================
      INITIALIZATION & EVENT BINDINGS
      ======================================== */
 
-  // Set initial indicator position on load (in case fonts/layout change)
+  /* ========================================
+     MENU SCHEDULE
+     ======================================== */
+
+  const baseTime = new Date();
+  const visitedChapters = new Set();
+
+  const expectedTimes = items.map((_, index) => {
+    return new Date(baseTime.getTime() + index * 60 * 1000);
+  });
+
+  function formatTime(date) {
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  }
+
+  function getDelayMinutes(now, expected) {
+    const diffMs = now.getTime() - expected.getTime();
+    if (diffMs <= 0) return 0;
+    return Math.floor(diffMs / 60000);
+  }
+
+  function updateSchedule(activeIndex) {
+    const now = new Date();
+
+    if (typeof activeIndex === "number" && !visitedChapters.has(activeIndex)) {
+      visitedChapters.add(activeIndex);
+      items[activeIndex].li.dataset.arrivalTime = now.toISOString();
+    }
+
+    let delayOffsetMinutes = 0;
+    if (typeof activeIndex === "number" && activeIndex >= 0) {
+      delayOffsetMinutes = getDelayMinutes(now, expectedTimes[activeIndex]);
+    }
+
+    items.forEach((item, index) => {
+      const timeEl = item.li.querySelector(".menu-time");
+      const delayEl = item.li.querySelector(".menu-delay");
+      if (!timeEl || !delayEl) return;
+
+      const scheduled = expectedTimes[index];
+      let delayMinutes = 0;
+
+      if (visitedChapters.has(index)) {
+        const arrivalIso = item.li.dataset.arrivalTime;
+        if (arrivalIso) {
+          const arrivalTime = new Date(arrivalIso);
+          delayMinutes = getDelayMinutes(arrivalTime, scheduled);
+        }
+      } else {
+        if (delayOffsetMinutes > 0 && now.getTime() > scheduled.getTime()) {
+          delayMinutes = delayOffsetMinutes;
+        }
+      }
+
+      timeEl.textContent = formatTime(scheduled);
+      if (delayMinutes > 0) {
+        delayEl.textContent = `+${delayMinutes} min`;
+      } else {
+        delayEl.textContent = "";
+      }
+    });
+
+  }
+
+  updateSchedule(0);
+  currentChapterIndex = 0;
+
+  // Set initial track + indicator position on load (fonts/layout can shift things)
+  updateTrackBounds();
   updateIndicator();
-  window.addEventListener("load", updateIndicator);
+
+  window.addEventListener("load", () => {
+    updateTrackBounds();
+    updateIndicator();
+  });
 
   // Update indicator while scrolling
   window.addEventListener("scroll", () => {
     window.requestAnimationFrame(updateIndicator);
   });
 
-  // Update indicator when resizing the window
+  // Update track + indicator when resizing (zoom triggers resize in most browsers)
   window.addEventListener("resize", () => {
-    window.requestAnimationFrame(updateIndicator);
+    window.requestAnimationFrame(() => {
+      updateTrackBounds();
+      updateIndicator();
+    });
   });
+
+  setInterval(() => {
+    updateSchedule(currentChapterIndex);
+  }, 60000);
+
+  /* ========================================
+     FFS CLOCK
+     ======================================== */
+
+  function initFfsClock() {
+    const minuteTicks = document.querySelector(".ffs-clock__minute-ticks");
+    const hourTicks = document.querySelector(".ffs-clock__hour-ticks");
+    if (!minuteTicks || !hourTicks) return;
+
+    minuteTicks.innerHTML = "";
+    hourTicks.innerHTML = "";
+
+    for (let i = 0; i < 60; i += 1) {
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", "100");
+      line.setAttribute("y1", "10");
+      line.setAttribute("x2", "100");
+      line.setAttribute("y2", "18");
+      line.setAttribute("class", "ffs-clock__tick ffs-clock__tick--minute");
+      line.setAttribute("transform", `rotate(${i * 6} 100 100)`);
+      minuteTicks.appendChild(line);
+    }
+
+    for (let i = 0; i < 12; i += 1) {
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", "100");
+      line.setAttribute("y1", "10");
+      line.setAttribute("x2", "100");
+      line.setAttribute("y2", "28");
+      line.setAttribute("class", "ffs-clock__tick ffs-clock__tick--hour");
+      line.setAttribute("transform", `rotate(${i * 30} 100 100)`);
+      hourTicks.appendChild(line);
+    }
+
+    const hourHand = document.querySelector(".ffs-clock__hand--hour");
+    const minuteHand = document.querySelector(".ffs-clock__hand--minute");
+    const secondHand = document.querySelector(".ffs-clock__hand--second");
+    const secondDot = document.querySelector(".ffs-clock__second-dot");
+
+    function updateClock() {
+      const now = new Date();
+      const seconds = now.getSeconds();
+      const minutes = now.getMinutes();
+      const hours = now.getHours() % 12;
+
+      const secondAngle = seconds * 6;
+      const minuteAngle = minutes * 6 + seconds * 0.1;
+      const hourAngle = hours * 30 + minutes * 0.5;
+
+      if (hourHand) hourHand.style.transform = `rotate(${hourAngle}deg)`;
+      if (minuteHand) minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
+      if (secondHand) secondHand.style.transform = `rotate(${secondAngle}deg)`;
+      if (secondDot) secondDot.style.transform = `rotate(${secondAngle}deg)`;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  }
+
+  initFfsClock();
 });

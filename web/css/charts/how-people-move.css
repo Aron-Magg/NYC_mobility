@@ -1,5 +1,5 @@
 /* ========================================
-   HOW PEOPLE MOVE – BIG PIE + BARS
+   HOW PEOPLE MOVE - GROUPED BARS + TOTAL BARS
    ======================================== */
 
 /* Card wrapper */
@@ -11,6 +11,7 @@
     background: rgba(15, 15, 15, 0.85);
     border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    position: relative;
 }
 
 /* Card title */
@@ -23,6 +24,28 @@
     margin-bottom: 12px;
 }
 
+.mobility-pie-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.mobility-pie-card__header .mobility-pie-card__title {
+    margin-bottom: 0;
+}
+
+.mobility-pie-card__header .mobility-pie-card__legend {
+    margin-top: 0;
+    position: absolute;
+    left: 40px;
+    bottom: 0;
+    transform: translateY(-40px);
+    z-index: 2;
+    background: transparent;
+    border-color: transparent;
+}
+
 /* ========================================
    TOP ROW: PIE (LEFT) + BARS (RIGHT)
    ======================================== */
@@ -32,17 +55,18 @@
     gap: 20px;
     align-items: stretch;
     margin-bottom: 12px;
+    justify-content: center;
 }
 
 /* Pie chart area (square, left) */
 .mobility-pie-card__chart {
     position: relative;
-    flex: 0 0 50%; /* takes about half of the row */
-    max-width: 520px;
+    flex: 1 1 100%;
+    max-width: none;
     width: 100%;
     margin: 0;
 
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 16 / 9;
 
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.16);
@@ -73,12 +97,77 @@
 .mobility-pie-card__bars {
     position: relative;
     flex: 1 1 0;
-    min-height: 260px;
+    min-height: 310px;
 
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.16);
     background: rgba(0, 0, 0, 0.5);
-    padding: 4px;
+    padding: 4px 4px 14px 4px;
+}
+
+.mobility-share-card {
+    margin-top: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 12px;
+}
+
+.mobility-share-card__title {
+    font-family: "ConsolasBold", monospace;
+    font-size: 12px;
+    color: #f2f3f4;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+}
+
+.mobility-share-card__chart {
+    width: 100%;
+    max-width: 520px;
+    margin: 0 auto;
+    aspect-ratio: 1 / 1;
+}
+
+.mobility-share-card__chart svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.mobility-share-card__layout {
+    display: inline-flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.mobility-share-card__layout .mobility-pie-card__legend {
+    flex: 0 0 200px;
+    margin-top: 0;
+}
+
+#mobility-share-legend .mobility-bars__legend {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+#mobility-share-legend .mobility-bars__legend-item {
+    justify-content: flex-start;
+}
+
+@media (max-width: 900px) {
+    .mobility-share-card__layout {
+        flex-direction: column;
+    }
+
+    .mobility-share-card__layout .mobility-pie-card__legend {
+        flex: 1 1 auto;
+        width: 100%;
+    }
 }
 
 /* SVG fills the bar chart area */
@@ -207,7 +296,6 @@
 }
 
 .mobility-bars__bar {
-    fill: #00e5ff;
     opacity: 0.9;
     transition:
         opacity 0.15s ease,
@@ -217,4 +305,42 @@
 .mobility-bars__bar:hover {
     opacity: 1;
     transform: translateY(-2px);
+}
+
+.mobility-bars__bar-label {
+    fill: #f2f3f4;
+    font-size: 10px;
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+.mobility-bars__axis-label {
+    fill: #f2f3f4;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.mobility-bars__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 8px;
+    font-size: 11px;
+    color: #f2f3f4;
+}
+
+.mobility-bars__legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 6px;
+}
+
+.mobility-bars__legend-color {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    display: inline-block;
 }

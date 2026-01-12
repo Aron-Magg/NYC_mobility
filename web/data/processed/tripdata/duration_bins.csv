@@ -1,0 +1,11 @@
+duration_bin,member_casual,trip_count
+0-5 min,casual,922404
+0-5 min,member,9276463
+5-10 min,casual,2221003
+5-10 min,member,11765690
+10-20 min,casual,2797849
+10-20 min,member,9870950
+20-40 min,casual,1838162
+20-40 min,member,4111908
+40+ min,casual,707750
+40+ min,member,636988

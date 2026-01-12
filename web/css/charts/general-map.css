@@ -8,7 +8,7 @@
   padding: 12px 20px;
   border-radius: 16px;
 
-  background: rgba(15, 15, 15, 0.75);
+  background: #0f0f0f;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
 }
@@ -40,6 +40,13 @@
   display: block;
   border-radius: 12px;
   overflow: hidden;
+}
+
+.overview-map__error {
+  color: #ffb3b3;
+  font-size: 14px;
+  font-style: italic;
+  margin: 8px 0 0;
 }
 
 /* ========================================
@@ -96,6 +103,10 @@
 /* Hover feedback on label text */
 .map-card__controls label:hover {
   color: #1ad15b;
+}
+
+.overview-map__legend-item:hover text {
+  fill: #1ad15b;
 }
 
 /* On small screens, let the controls use full width */

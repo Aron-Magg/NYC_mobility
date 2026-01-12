@@ -1,3 +1,9 @@
+/* =========================================================
+   NYC Mobility - Global Styles
+   Date: 2026-01-09
+   Author: Aron Maggisano
+   ========================================================= */
+
 /* ========================================
    FONT EMBEDDING
    ======================================== */
@@ -17,51 +23,141 @@
     --font-sans:
         system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         sans-serif;
+
+    --nav-height: 120px;
+    --nav-gap: 16px;
+
+    --nav-radius: 28px;
+    --rail-radius: 20px;
+
+    --nav-pad-y: 12px;
+    --nav-pad-x: clamp(12px, 2vw, 16px);
+
+    --title-font-size: clamp(28px, 3.3vw, 44px);
+    --menu-font-size: clamp(12px, 1.1vw, 15px);
+
+    --menu-gap: clamp(10px, 2.2vw, 48px);
+
+    --track-inset-default: clamp(40px, 4vw, 56px);
 }
 
 /* ========================================
    GLOBAL LAYOUT & TYPOGRAPHY
    ======================================== */
 
-html {
-    background: #2f3030; /* dark fallback behind the body */
-    overscroll-behavior: none; /* disable rubber-band on root scroller */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
-:root {
-    --nav-height: 96px;
-    --nav-gap: 16px; /* spazio extra tra navbar e contenuto */
+html {
+    background: #2f3030;
+    overscroll-behavior: none;
 }
 
 body {
     margin: 0;
-
-    /* prima era padding-left: 220px; (sidebar a sinistra) */
     padding-left: 0;
-
-    /* spazio per la topbar fissa */
     padding-top: calc(var(--nav-height) + var(--nav-gap));
-
     overscroll-behavior: none;
 
     background:
-        linear-gradient(#2f3030fa, #2f3030fa),
+        linear-gradient(#2f3030e2, #2f3030fa),
         url("../images/backgrounds/SubwayMapNYC_Large.jpg") center / cover
             no-repeat fixed;
 }
 
+.ffs-clock {
+  position: fixed;
+  left: 8px;
+  top: 8px;
+  width: 134px;
+  height: 134px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.ffs-clock__face {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ffs-clock__rim {
+  fill: #d9d9d9;
+  stroke: #8b8b8b;
+  stroke-width: 4;
+}
+
+.ffs-clock__dial {
+  fill: #f4f4f4;
+  stroke: #c0c0c0;
+  stroke-width: 2;
+}
+
+.ffs-clock__tick {
+  stroke: #101010;
+  stroke-linecap: square;
+}
+
+.ffs-clock__tick--hour {
+  stroke-width: 6;
+}
+
+.ffs-clock__tick--minute {
+  stroke-width: 3;
+  opacity: 0.8;
+}
+
+.ffs-clock__hand {
+  stroke-linecap: square;
+  transform-origin: 100px 100px;
+}
+
+.ffs-clock__hand--hour {
+  stroke: #1a1a1a;
+  stroke-width: 8;
+}
+
+.ffs-clock__hand--minute {
+  stroke: #1a1a1a;
+  stroke-width: 6;
+}
+
+.ffs-clock__hand--second {
+  stroke: #d8342a;
+  stroke-width: 2.5;
+}
+
+.ffs-clock__hub {
+  fill: #d8342a;
+}
+
+.ffs-clock__second-dot {
+  fill: #d8342a;
+  transform-origin: 100px 100px;
+}
+
+@media (max-width: 900px) {
+  .ffs-clock {
+    left: 12px;
+    width: 160px;
+    height: 160px;
+  }
+}
 
 main {
     max-width: 1600px;
     margin: 40px auto;
     padding: 0 40px;
+
     font-family: var(--font-sans);
     font-size: 18px;
     line-height: 1.6;
     color: #111;
 }
 
-/* Main page title */
 main h1 {
     font-family: "ConsolasBold", monospace;
     font-size: 60px;
@@ -70,42 +166,29 @@ main h1 {
     text-align: center;
 }
 
-/* Chapter subtitles (legacy style, currently not used) */
-/*
-main h2 {
-  font-family: "ConsolasBold", monospace;
-  font-size: 42px;
-  margin-top: 48px;
-  margin-bottom: 12px;
-  color: #f2f3f4;
-}
-*/
-
-/* Generic paragraph text inside main */
 main p {
     margin-bottom: 12px;
     color: #f2f3f4;
 }
 
 /* ========================================
-   TOP NAV (ex SIDEBAR) – HORIZONTAL
+   TOP NAVIGATION
    ======================================== */
 
-.side-bar-outer {
+.top-nav-outer {
     position: fixed;
     top: 8px;
-    left: 8px;
+    left: calc(8px + 134px + 12px);
     right: 8px;
 
     height: var(--nav-height);
     width: auto;
-    bottom: auto;
 
     background: #100c08;
-    border-radius: 28px;
-    box-sizing: border-box;
+    border-radius: var(--nav-radius);
 
-    padding: 12px 16px;
+    padding: var(--nav-pad-y) var(--nav-pad-x);
+
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -113,69 +196,65 @@ main p {
 
     box-shadow: 0 8px 24px rgba(7, 1, 70, 0.2);
     z-index: 9998;
+
+    overflow: hidden;
 }
 
-.side-bar-title {
+.top-nav-title {
     color: #f2f3f4;
     font-family: "ConsolasBold", monospace;
-    font-size: 44px;
+    font-size: var(--title-font-size);
     font-weight: 700;
+    line-height: 1;
 
-    width: auto;
     margin: 0;
     padding: 6px 10px;
     border-radius: 16px;
 
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease;
+
+    white-space: nowrap;
+    flex: 0 0 auto;
 }
 
-.side-bar-title:hover {
+.top-nav-title:hover {
     background-color: #1c1c1c4d;
     color: #343434;
 }
 
-/* il “binario” + menu */
-.side-bar {
+.top-nav {
     position: relative;
     flex: 1 1 auto;
+
     height: 100%;
-    width: auto;
+    min-width: 0;
 
     margin: 0;
     background: #343434;
-    border-radius: 20px;
-    box-sizing: border-box;
+    border-radius: var(--rail-radius);
 
     display: flex;
     align-items: center;
 
-    /* manopole */
-    --rail-center: -40px;   /* ↓ più piccolo = pallini/rail PIÙ in basso */
-    --label-shift: 10px;   /* ↑ più grande = scritte PIÙ in basso */
+    --rail-center: -40px;
+    --label-shift: 10px;
 
-    /* spazio sotto per non tagliare pallini/indicatore */
-    padding: 12px 16px 64px 16px;
+    padding: 12px var(--nav-pad-x) 64px var(--nav-pad-x);
 
-    /* quanto rientra la linea (e anche il menu) dai lati */
-    --track-inset: 56px;
+    --track-inset: var(--track-inset-default);
 
-    /* posizione "centro" del pallino rosso (in altezza) */
-    --indicator-center: calc(var(--rail-center) + 55px);
-
-    /* centro della linea bianca: più basso del pallino rosso */
-    --track-center: calc(var(--indicator-center) - 14px);
-
-    /* fallback se JS non gira */
     --track-left: var(--track-inset);
     --track-right: var(--track-inset);
 
-    /* quanto sta sopra la linea il pallino rosso (centro) */
-    --indicator-lift: 38px;
+    overflow: hidden;
 }
 
-/* rail orizzontale */
-.side-bar::before {
+/* ========================================
+   TOP NAV RAIL
+   ======================================== */
+
+.top-nav::before {
     content: "";
     position: absolute;
 
@@ -187,32 +266,36 @@ main p {
 
     background-color: #343434;
     border-radius: 999px;
+
     z-index: 1;
-    top: auto;
+    pointer-events: none;
 }
 
-.side-bar::after {
+.top-nav::after {
     content: "";
     position: absolute;
 
     left: calc(var(--track-left) + 3px);
     right: calc(var(--track-right) + 3px);
 
-    bottom: calc(var(--rail-center) + 60px); /* 6px/2 */
+    bottom: calc(var(--rail-center) + 60px);
     height: 6px;
 
     background-color: #f2f3f4;
     border-radius: 999px;
-    z-index: 3;
-    top: auto;
+
+    z-index: 2;
+    pointer-events: none;
 }
 
+/* ========================================
+   TOP NAV MENU
+   ======================================== */
 
-/* menu orizzontale */
 .menu {
     list-style: none;
     margin: 0;
-    padding: 0 0;
+    padding: 0;
 
     position: relative;
     width: 100%;
@@ -222,32 +305,43 @@ main p {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    gap: 100px;
+
+    gap: var(--menu-gap);
+
+    flex-wrap: nowrap;
+    min-width: 0;
+
+    z-index: 5;
 }
 
 .menu li {
     position: relative;
     height: 100%;
-    flex: 1 1 auto;
+    flex: 1 1 0;
+    min-width: 0;
 
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 4px;
 }
 
-/* “station dots” sotto le label */
+/* Station dots under labels */
 .menu li::before {
     content: "";
     position: absolute;
     left: 50%;
     bottom: calc(var(--rail-center) - 10px);
     transform: translateX(-50%);
+
     width: 20px;
     height: 20px;
     border-radius: 50%;
     background-color: #f2f3f4;
-    z-index: 2;
-    top: auto;
+
+    z-index: 6;
+    pointer-events: none;
 }
 
 .menu li::after {
@@ -256,12 +350,14 @@ main p {
     left: 50%;
     bottom: calc(var(--rail-center) - 5px);
     transform: translateX(-50%);
+
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background-color: #343434;
-    z-index: 4;
-    top: auto;
+
+    z-index: 7;
+    pointer-events: none;
 }
 
 .menu li:first-child::before,
@@ -282,20 +378,49 @@ main p {
     position: relative;
     text-decoration: none;
     color: #f2f3f4;
-    font-family: "ConsolasBold", monospace;
-    font-size: 15px;
 
-    display: inline-block;
-    width: auto;
+    font-family: "ConsolasBold", monospace;
+    font-size: var(--menu-font-size);
+    line-height: 1.1;
+
+    width: 100%;
+    max-width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     text-align: center;
 
     margin: 0;
-    padding: 6px 10px;
+    padding: 6px clamp(6px, 0.9vw, 10px);
     border-radius: 12px;
 
-    transition: background-color 0.2s ease, color 0.2s ease;
     transform: translateY(var(--label-shift));
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.menu-time-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    font-family: "ConsolasBold", monospace;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    color: #c9c9c9;
+    transform: translateY(var(--label-shift));
+}
+
+.menu-delay {
+    color: #ff5b5b;
+    font-size: 11px;
+    font-weight: 700;
 }
 
 .menu a:hover {
@@ -303,22 +428,135 @@ main p {
     color: #343434;
 }
 
-/* indicatore rosso: ora si muove in X (left) */
+.credits-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.credits-col {
+    flex: 1 1 240px;
+}
+
+.credits-spacer {
+    height: 80px;
+}
+
+/* Red indicator dot */
 .menu-indicator {
     position: absolute;
-    left: 16px;
+    left: 0;
     bottom: calc(var(--rail-center) + 55px);
     transform: translateX(-50%);
 
     width: 18px;
     height: 18px;
     border-radius: 50%;
+
     background: #ff3b3b;
     box-shadow: 0 0 8px rgba(255, 59, 59, 0.8);
-    z-index: 5;
 
-    transition: left 0.12s linear;
-    top: auto;
+    z-index: 8;
+
+    transition: transform 0.12s linear;
+    will-change: transform;
+
+    pointer-events: none;
+}
+
+/* ========================================
+   CHAPTER LAYOUT
+   ======================================== */
+
+.chapter {
+    margin: 72px 0;
+    position: relative;
+    font-family: var(--font-sans);
+}
+
+.chapter-heading {
+    margin: 0 0 8px 0;
+    text-align: left;
+}
+
+.chapter-heading span {
+    display: inline-block;
+    padding: 0;
+    border: none;
+    background: transparent;
+
+    font-family: "ConsolasBold", monospace;
+    font-size: 42px;
+    margin-top: 48px;
+    color: #f2f3f4;
+}
+
+.chapter-layout {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+    column-gap: 10px;
+    margin-top: 4px;
+}
+
+.chapter-bracket {
+    position: relative;
+    left: 4px;
+}
+
+.chapter-bracket::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    top: 0;
+    height: 100%;
+    width: 20px;
+
+    border-left: 4px solid #e53935;
+    border-bottom: 4px solid #e53935;
+    border-bottom-left-radius: 24px;
+}
+
+.chapter-box {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+}
+
+.chapter-box p {
+    margin-bottom: 12px;
+}
+
+/* ========================================
+   CHAPTER TEXT: LISTS + INLINE TEXT COLOR FIX
+   ======================================== */
+
+/* Lists in the storytelling chapters were inheriting main's default #111 */
+.chapter-box ul,
+.chapter-box ol {
+    margin: 0 0 12px 22px;
+    padding: 0;
+    color: #f2f3f4;
+}
+
+.chapter-box li {
+    margin: 6px 0;
+    color: #f2f3f4;
+}
+
+/* Keep emphasis readable on dark background */
+.chapter-box li strong,
+.chapter-box li em,
+.chapter-box li i {
+    color: #f2f3f4;
+}
+
+/* Optional (future-proof): links inside the chapter text */
+.chapter-box a {
+    color: #f2f3f4;
 }
 
 
@@ -343,113 +581,36 @@ main p {
 }
 
 /* ========================================
-   CHAPTER LAYOUT (TITLE + RED BRACKET)
-   ======================================== */
-
-/* Chapter container */
-.chapter {
-    margin: 72px 0;
-    position: relative;
-    font-family: var(--font-sans);
-}
-
-/* Chapter title line, aligned left */
-.chapter-heading {
-    margin: 0 0 8px 0;
-    text-align: left;
-}
-
-/* Chapter title text */
-.chapter-heading span {
-    display: inline-block;
-    padding: 0;
-    border: none;
-    background: transparent;
-
-    font-family: "ConsolasBold", monospace;
-    font-size: 42px;
-    margin-top: 48px;
-    color: #f2f3f4;
-}
-
-/* Grid layout below title: red bracket + text */
-.chapter-layout {
-    display: grid;
-    grid-template-columns: 20px minmax(0, 1fr); /* left bracket + content */
-    column-gap: 10px; /* keeps text close to line */
-    margin-top: 4px;
-}
-
-/* Column that holds the red bracket/curve */
-.chapter-bracket {
-    position: relative;
-    left: 4px;
-}
-
-/* Red vertical line with a rounded end at the bottom */
-.chapter-bracket::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-
-    top: 0; /* starts right under the title */
-    height: 100%; /* follows the whole chapter content */
-    width: 20px; /* length of the bottom horizontal part */
-
-    border-left: 4px solid #e53935;
-    border-bottom: 4px solid #e53935;
-    border-bottom-left-radius: 24px;
-    box-sizing: border-box;
-}
-
-/* Chapter content: plain text, no box */
-.chapter-box {
-    border: none;
-    border-radius: 0;
-    padding: 0;
-    background: transparent;
-}
-
-/* Paragraph spacing inside chapter content */
-.chapter-box p {
-    margin-bottom: 12px;
-}
-
-/* ========================================
    EASTER EGG: TRAIN ANIMATION
    ======================================== */
 
-/* Container for the little train crossing the screen */
 .easter-train {
     position: fixed;
     left: 0;
-    bottom: 40px; /* distance from bottom of the viewport */
+    bottom: 40px;
+
     display: flex;
     align-items: flex-end;
     gap: 0;
 
-    pointer-events: none; /* do not block click interactions */
-    z-index: 9999; /* always on top */
+    pointer-events: none;
+    z-index: 9999;
 
-    transform: translateX(-110vw); /* start off-screen to the left */
+    transform: translateX(-110vw);
     opacity: 0;
 }
 
-/* Each wagon / locomotive image */
 .easter-train img.train-car {
-    height: 80px; /* train size */
+    height: 80px;
     width: auto;
     display: block;
 }
 
-/* Active state: make the train visible and animate it */
 .easter-train--active {
     opacity: 1;
     animation: train-run 5s linear forwards;
 }
 
-/* Keyframes for train movement: left to right across the viewport */
 @keyframes train-run {
     from {
         transform: translateX(-110vw);
@@ -460,10 +621,9 @@ main p {
 }
 
 /* ========================================
-   LINK RESET (NO UNDERLINES)
+   LINK RESET
    ======================================== */
 
-/* Remove underline and focus outlines for sidebar menu links in all states */
 .menu a,
 .menu a:link,
 .menu a:visited,
@@ -475,14 +635,13 @@ main p {
     outline: none;
 }
 
-/* Remove underline and focus outlines for the clickable "NYC" title link */
-.side-bar-outer > a,
-.side-bar-outer > a:link,
-.side-bar-outer > a:visited,
-.side-bar-outer > a:hover,
-.side-bar-outer > a:active,
-.side-bar-outer > a:focus,
-.side-bar-outer > a:focus-visible {
+.top-nav-outer > a,
+.top-nav-outer > a:link,
+.top-nav-outer > a:visited,
+.top-nav-outer > a:hover,
+.top-nav-outer > a:active,
+.top-nav-outer > a:focus,
+.top-nav-outer > a:focus-visible {
     text-decoration: none !important;
     outline: none;
 }
