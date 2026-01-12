@@ -2,7 +2,6 @@
 NYC Mobility project package.
 
 This package contains:
-- pipeline: data ingestion and processing pipelines
 - preprocessing: data cleaning and feature engineering
 - visualizations: data visualization utilities
 - server: local web server for the front-end.
