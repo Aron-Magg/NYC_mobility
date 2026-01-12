@@ -75,10 +75,6 @@ data/processed/
 # Optional: raw/downloaded data (uncomment if you never want to track it)
 # data/raw/
 data/tripdata/
-# Large raw traffic counts (keep out of VCS)
-data/raw_traffic_counts/
-# Local scratch/cache
-cache/
 # *.csv
 
 # --- Frontend / web toolchains (safe even if you don't use them now) ---
