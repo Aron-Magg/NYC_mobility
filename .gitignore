@@ -23,6 +23,7 @@ venv.bak/
 .pyre/
 .pytype/
 .cache/
+cache/
 .coverage
 coverage.xml
 htmlcov/
