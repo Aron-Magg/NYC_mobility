@@ -1,0 +1,29 @@
+service,Borough,trips,share
+fhv,Manhattan,275478680,0.4801
+fhv,Brooklyn,133664187,0.233
+fhv,Queens,86295442,0.1504
+fhv,Bronx,43088501,0.0751
+fhv,Unknown,29481567,0.0514
+fhv,Staten Island,5631249,0.0098
+fhv,EWR,120535,0.0002
+green,Brooklyn,28401782,0.3437
+green,Manhattan,25679781,0.3108
+green,Queens,23192101,0.2807
+green,Bronx,5163691,0.0625
+green,Unknown,168588,0.002
+green,Staten Island,21289,0.0003
+green,EWR,2042,0.0
+hvfhs,Manhattan,376516414,0.4016
+hvfhs,Brooklyn,251207750,0.268
+hvfhs,Queens,179063317,0.191
+hvfhs,Bronx,118430270,0.1263
+hvfhs,Staten Island,12180557,0.013
+hvfhs,Unknown,54487,0.0001
+hvfhs,EWR,18218,0.0
+yellow,Manhattan,707730378,0.9047
+yellow,Queens,47829412,0.0611
+yellow,Brooklyn,13017775,0.0166
+yellow,Unknown,12661060,0.0162
+yellow,Bronx,938149,0.0012
+yellow,EWR,63941,0.0001
+yellow,Staten Island,28770,0.0

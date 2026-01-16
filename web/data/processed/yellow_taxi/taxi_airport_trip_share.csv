@@ -1,0 +1,7 @@
+service,airport_trip,trips,share
+yellow,True,22544425,0.0288
+yellow,False,759725060,0.9712
+green,True,275599,0.0033
+green,False,82353675,0.9967
+hvfhs,True,38148441,0.0407
+hvfhs,False,899322572,0.9593

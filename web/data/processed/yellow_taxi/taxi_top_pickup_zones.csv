@@ -1,0 +1,81 @@
+service,year,PULocationID,trips,Borough,Zone
+fhv,2023,206,65131,Staten Island,Saint George/New Brighton
+fhv,2023,221,56336,Staten Island,Stapleton
+fhv,2023,92,43452,Queens,Flushing
+fhv,2023,132,38709,Queens,JFK Airport
+fhv,2023,265,37392,Unknown,Unknown
+fhv,2023,7,36263,Queens,Astoria
+fhv,2023,138,34801,Queens,LaGuardia Airport
+fhv,2023,61,34041,Brooklyn,Crown Heights North
+fhv,2023,129,32563,Queens,Jackson Heights
+fhv,2023,230,31769,Manhattan,Times Sq/Theatre District
+fhv,2023,214,31251,Staten Island,South Beach/Dongan Hills
+fhv,2023,23,30656,Staten Island,Bloomfield/Emerson Hill
+fhv,2023,179,28701,Queens,Old Astoria
+fhv,2023,79,28144,Manhattan,East Village
+fhv,2023,223,26374,Queens,Steinway
+fhv,2023,245,26153,Staten Island,West Brighton
+fhv,2023,115,26115,Staten Island,Grymes Hill/Clifton
+fhv,2023,161,25893,Manhattan,Midtown Center
+fhv,2023,156,25368,Staten Island,Mariners Harbor
+fhv,2023,170,25267,Manhattan,Murray Hill
+green,2023,74,117455,Manhattan,East Harlem North
+green,2023,75,75688,Manhattan,East Harlem South
+green,2023,41,33203,Manhattan,Central Harlem
+green,2023,166,31555,Manhattan,Morningside Heights
+green,2023,95,31156,Queens,Forest Hills
+green,2023,43,23655,Manhattan,Central Park
+green,2023,82,23604,Queens,Elmhurst
+green,2023,97,17136,Brooklyn,Fort Greene
+green,2023,42,15862,Manhattan,Central Harlem North
+green,2023,244,15422,Manhattan,Washington Heights South
+green,2023,65,15178,Brooklyn,Downtown Brooklyn/MetroTech
+green,2023,7,14914,Queens,Astoria
+green,2023,130,13140,Queens,Jamaica
+green,2023,129,11679,Queens,Jackson Heights
+green,2023,260,10823,Queens,Woodside
+green,2023,66,7688,Brooklyn,DUMBO/Vinegar Hill
+green,2023,134,6757,Queens,Kew Gardens
+green,2023,116,6254,Manhattan,Hamilton Heights
+green,2023,93,6224,Queens,Flushing Meadows-Corona Park
+green,2023,92,6108,Queens,Flushing
+hvfhs,2023,132,3286808,Queens,JFK Airport
+hvfhs,2023,138,3210875,Queens,LaGuardia Airport
+hvfhs,2023,79,2471811,Manhattan,East Village
+hvfhs,2023,61,2264023,Brooklyn,Crown Heights North
+hvfhs,2023,161,2171791,Manhattan,Midtown Center
+hvfhs,2023,230,2171395,Manhattan,Times Sq/Theatre District
+hvfhs,2023,231,2052091,Manhattan,TriBeCa/Civic Center
+hvfhs,2023,68,2005890,Manhattan,East Chelsea
+hvfhs,2023,164,1928245,Manhattan,Midtown South
+hvfhs,2023,246,1916799,Manhattan,West Chelsea/Hudson Yards
+hvfhs,2023,234,1914440,Manhattan,Union Sq
+hvfhs,2023,148,1906250,Manhattan,Lower East Side
+hvfhs,2023,37,1877276,Brooklyn,Bushwick South
+hvfhs,2023,76,1832037,Brooklyn,East New York
+hvfhs,2023,48,1786298,Manhattan,Clinton East
+hvfhs,2023,255,1766306,Brooklyn,Williamsburg (North Side)
+hvfhs,2023,249,1711018,Manhattan,West Village
+hvfhs,2023,7,1681762,Queens,Astoria
+hvfhs,2023,170,1654391,Manhattan,Murray Hill
+hvfhs,2023,181,1612352,Brooklyn,Park Slope
+yellow,2023,132,1501739,Queens,JFK Airport
+yellow,2023,237,1290794,Manhattan,Upper East Side South
+yellow,2023,161,1288630,Manhattan,Midtown Center
+yellow,2023,236,1147057,Manhattan,Upper East Side North
+yellow,2023,162,989556,Manhattan,Midtown East
+yellow,2023,186,965829,Manhattan,Penn Station/Madison Sq West
+yellow,2023,138,962238,Queens,LaGuardia Airport
+yellow,2023,230,929797,Manhattan,Times Sq/Theatre District
+yellow,2023,142,904269,Manhattan,Lincoln Square East
+yellow,2023,170,836919,Manhattan,Murray Hill
+yellow,2023,163,802246,Manhattan,Midtown North
+yellow,2023,239,770211,Manhattan,Upper West Side South
+yellow,2023,48,755452,Manhattan,Clinton East
+yellow,2023,234,754617,Manhattan,Union Sq
+yellow,2023,68,723637,Manhattan,East Chelsea
+yellow,2023,79,670773,Manhattan,East Village
+yellow,2023,141,668270,Manhattan,Lenox Hill West
+yellow,2023,164,648294,Manhattan,Midtown South
+yellow,2023,249,619746,Manhattan,West Village
+yellow,2023,107,591213,Manhattan,Gramercy

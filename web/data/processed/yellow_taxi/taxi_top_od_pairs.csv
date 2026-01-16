@@ -1,0 +1,81 @@
+service,year,PULocationID,DOLocationID,trips,OriginBorough,OriginZone,DestBorough,DestZone
+fhv,2023,206,206,20591,Staten Island,Saint George/New Brighton,Staten Island,Saint George/New Brighton
+fhv,2023,7,7,14820,Queens,Astoria,Queens,Astoria
+fhv,2023,223,223,13186,Queens,Steinway,Queens,Steinway
+fhv,2023,179,179,12959,Queens,Old Astoria,Queens,Old Astoria
+fhv,2023,221,221,12554,Staten Island,Stapleton,Staten Island,Stapleton
+fhv,2023,221,206,12048,Staten Island,Stapleton,Staten Island,Saint George/New Brighton
+fhv,2023,129,129,10138,Queens,Jackson Heights,Queens,Jackson Heights
+fhv,2023,92,92,9057,Queens,Flushing,Queens,Flushing
+fhv,2023,206,221,8727,Staten Island,Saint George/New Brighton,Staten Island,Stapleton
+fhv,2023,132,265,7443,Queens,JFK Airport,Unknown,Unknown
+fhv,2023,56,56,7109,Queens,Corona,Queens,Corona
+fhv,2023,230,265,6283,Manhattan,Times Sq/Theatre District,Unknown,Unknown
+fhv,2023,206,245,6265,Staten Island,Saint George/New Brighton,Staten Island,West Brighton
+fhv,2023,265,265,6073,Unknown,Unknown,Unknown,Unknown
+fhv,2023,173,173,6044,Queens,North Corona,Queens,North Corona
+fhv,2023,82,82,5772,Queens,Elmhurst,Queens,Elmhurst
+fhv,2023,23,23,5672,Staten Island,Bloomfield/Emerson Hill,Staten Island,Bloomfield/Emerson Hill
+fhv,2023,245,206,5637,Staten Island,West Brighton,Staten Island,Saint George/New Brighton
+fhv,2023,214,214,5016,Staten Island,South Beach/Dongan Hills,Staten Island,South Beach/Dongan Hills
+fhv,2023,156,156,4794,Staten Island,Mariners Harbor,Staten Island,Mariners Harbor
+green,2023,74,75,17593,Manhattan,East Harlem North,Manhattan,East Harlem South
+green,2023,75,74,12897,Manhattan,East Harlem South,Manhattan,East Harlem North
+green,2023,74,236,11147,Manhattan,East Harlem North,Manhattan,Upper East Side North
+green,2023,95,95,9242,Queens,Forest Hills,Queens,Forest Hills
+green,2023,74,41,8331,Manhattan,East Harlem North,Manhattan,Central Harlem
+green,2023,74,166,8095,Manhattan,East Harlem North,Manhattan,Morningside Heights
+green,2023,74,74,6735,Manhattan,East Harlem North,Manhattan,East Harlem North
+green,2023,74,238,6375,Manhattan,East Harlem North,Manhattan,Upper West Side North
+green,2023,74,263,6362,Manhattan,East Harlem North,Manhattan,Yorkville West
+green,2023,74,42,6269,Manhattan,East Harlem North,Manhattan,Central Harlem North
+green,2023,75,75,6152,Manhattan,East Harlem South,Manhattan,East Harlem South
+green,2023,75,236,5326,Manhattan,East Harlem South,Manhattan,Upper East Side North
+green,2023,74,151,4357,Manhattan,East Harlem North,Manhattan,Manhattan Valley
+green,2023,75,238,4236,Manhattan,East Harlem South,Manhattan,Upper West Side North
+green,2023,82,138,4208,Queens,Elmhurst,Queens,LaGuardia Airport
+green,2023,41,42,4111,Manhattan,Central Harlem,Manhattan,Central Harlem North
+green,2023,74,43,4105,Manhattan,East Harlem North,Manhattan,Central Park
+green,2023,74,239,4018,Manhattan,East Harlem North,Manhattan,Upper West Side South
+green,2023,75,263,3950,Manhattan,East Harlem South,Manhattan,Yorkville West
+green,2023,41,74,3844,Manhattan,Central Harlem,Manhattan,East Harlem North
+hvfhs,2023,132,265,628891,Queens,JFK Airport,Unknown,Unknown
+hvfhs,2023,76,76,543795,Brooklyn,East New York,Brooklyn,East New York
+hvfhs,2023,138,265,400927,Queens,LaGuardia Airport,Unknown,Unknown
+hvfhs,2023,26,26,344591,Brooklyn,Borough Park,Brooklyn,Borough Park
+hvfhs,2023,39,39,326081,Brooklyn,Canarsie,Brooklyn,Canarsie
+hvfhs,2023,61,61,264229,Brooklyn,Crown Heights North,Brooklyn,Crown Heights North
+hvfhs,2023,216,132,245744,Queens,South Ozone Park,Queens,JFK Airport
+hvfhs,2023,7,7,225192,Queens,Astoria,Queens,Astoria
+hvfhs,2023,14,14,224084,Brooklyn,Bay Ridge,Brooklyn,Bay Ridge
+hvfhs,2023,129,129,219404,Queens,Jackson Heights,Queens,Jackson Heights
+hvfhs,2023,216,216,192973,Queens,South Ozone Park,Queens,South Ozone Park
+hvfhs,2023,230,265,186641,Manhattan,Times Sq/Theatre District,Unknown,Unknown
+hvfhs,2023,95,95,184936,Queens,Forest Hills,Queens,Forest Hills
+hvfhs,2023,37,37,178811,Brooklyn,Bushwick South,Brooklyn,Bushwick South
+hvfhs,2023,161,265,166608,Manhattan,Midtown Center,Unknown,Unknown
+hvfhs,2023,36,37,164661,Brooklyn,Bushwick North,Brooklyn,Bushwick South
+hvfhs,2023,42,42,163657,Manhattan,Central Harlem North,Manhattan,Central Harlem North
+hvfhs,2023,181,181,163402,Brooklyn,Park Slope,Brooklyn,Park Slope
+hvfhs,2023,37,36,156650,Brooklyn,Bushwick South,Brooklyn,Bushwick North
+hvfhs,2023,89,89,151860,Brooklyn,Flatbush/Ditmas Park,Brooklyn,Flatbush/Ditmas Park
+yellow,2023,264,264,229479,Unknown,NV,Unknown,NV
+yellow,2023,237,236,183049,Manhattan,Upper East Side South,Manhattan,Upper East Side North
+yellow,2023,236,237,155844,Manhattan,Upper East Side North,Manhattan,Upper East Side South
+yellow,2023,237,237,126564,Manhattan,Upper East Side South,Manhattan,Upper East Side South
+yellow,2023,236,236,121562,Manhattan,Upper East Side North,Manhattan,Upper East Side North
+yellow,2023,161,237,86897,Manhattan,Midtown Center,Manhattan,Upper East Side South
+yellow,2023,237,161,85689,Manhattan,Upper East Side South,Manhattan,Midtown Center
+yellow,2023,161,236,75643,Manhattan,Midtown Center,Manhattan,Upper East Side North
+yellow,2023,142,239,70292,Manhattan,Lincoln Square East,Manhattan,Upper West Side South
+yellow,2023,239,142,68676,Manhattan,Upper West Side South,Manhattan,Lincoln Square East
+yellow,2023,239,238,66912,Manhattan,Upper West Side South,Manhattan,Upper West Side North
+yellow,2023,237,162,66867,Manhattan,Upper East Side South,Manhattan,Midtown East
+yellow,2023,132,230,66423,Queens,JFK Airport,Manhattan,Times Sq/Theatre District
+yellow,2023,132,132,66332,Queens,JFK Airport,Queens,JFK Airport
+yellow,2023,236,161,65550,Manhattan,Upper East Side North,Manhattan,Midtown Center
+yellow,2023,141,236,63473,Manhattan,Lenox Hill West,Manhattan,Upper East Side North
+yellow,2023,186,230,58511,Manhattan,Penn Station/Madison Sq West,Manhattan,Times Sq/Theatre District
+yellow,2023,162,237,58294,Manhattan,Midtown East,Manhattan,Upper East Side South
+yellow,2023,238,239,56100,Manhattan,Upper West Side North,Manhattan,Upper West Side South
+yellow,2023,186,161,55885,Manhattan,Penn Station/Madison Sq West,Manhattan,Midtown Center

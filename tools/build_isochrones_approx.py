@@ -18,7 +18,7 @@ MODES = {
     "driving": 30.0,
 }
 
-MINUTES = [5, 10, 15]
+MINUTES = [5, 10, 20, 30, 40]
 POINTS_PER_RING = 96
 EARTH_RADIUS_KM = 6371.0
 

@@ -17,7 +17,7 @@
 /* Card title */
 .mobility-pie-card__title {
     font-family: "ConsolasBold", monospace;
-    font-size: 22px;
+    font-size: 24px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: #f2f3f4;
@@ -45,6 +45,7 @@
     background: transparent;
     border-color: transparent;
 }
+
 
 /* ========================================
    TOP ROW: PIE (LEFT) + BARS (RIGHT)
@@ -97,12 +98,12 @@
 .mobility-pie-card__bars {
     position: relative;
     flex: 1 1 0;
-    min-height: 310px;
+    min-height: 330px;
 
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.16);
     background: rgba(0, 0, 0, 0.5);
-    padding: 4px 4px 14px 4px;
+    padding: 24px 4px 14px 4px;
 }
 
 .mobility-share-card {
@@ -183,7 +184,7 @@
     top: 6px;
     right: 10px;
     font-family: "ConsolasBold", monospace;
-    font-size: 12px;
+    font-size: 18px;
     color: #f2f3f4;
     opacity: 0.9;
     pointer-events: none;
@@ -292,7 +293,7 @@
 
 .mobility-bars__axis text {
     fill: #e0e0e0;
-    font-size: 11px;
+    font-size: 16px;
 }
 
 .mobility-bars__bar {
@@ -309,7 +310,7 @@
 
 .mobility-bars__bar-label {
     fill: #f2f3f4;
-    font-size: 10px;
+    font-size: 20px;
     font-weight: 600;
     text-anchor: middle;
     pointer-events: none;
@@ -317,7 +318,7 @@
 
 .mobility-bars__axis-label {
     fill: #f2f3f4;
-    font-size: 11px;
+    font-size: 16px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }

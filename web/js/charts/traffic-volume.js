@@ -16,14 +16,15 @@
   };
 
   const BORO_COLORS = {
-    Manhattan: "#ff3bff",
-    Brooklyn: "#00bfff",
-    Queens: "#ffd447",
-    Bronx: "#1ad15b",
-    "Staten Island": "#9c7cff",
+    Manhattan: "#ede924",
+    Brooklyn: "#ea0065",
+    Queens: "#77ff00",
+    Bronx: "#da1009",
+    "Staten Island": "#09d0da",
   };
 
   const BORO_ORDER = ["Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island"];
+  const loadCsv = window.loadCsvMaybeParts || d3.csv;
 
   function getTooltip() {
     let tooltip = d3.select("body").select(".traffic-tooltip");
@@ -39,6 +40,12 @@
     return fmt(value).replace("G", "B");
   }
 
+  function formatVolumeDetailed(value) {
+    if (!Number.isFinite(value)) return "0";
+    const fmt = d3.format(".3s");
+    return fmt(value).replace("G", "B");
+  }
+
   function renderHourlyChart(data) {
     const container = d3.select("#traffic-hourly");
     if (container.empty()) return;
@@ -48,7 +55,7 @@
     const node = container.node();
     const width = node.clientWidth || 700;
     const height = node.clientHeight || 320;
-    const margin = { top: 24, right: 24, bottom: 52, left: 56 };
+    const margin = { top: 24, right: 24, bottom: 64, left: 92 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -59,15 +66,15 @@
 
     const g = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-    const grouped = d3.group(data, (d) => d.Boro);
-    const hours = d3.range(0, 24);
-    const maxValue = d3.max(data, (d) => d.avg_volume) || 0;
-
     if (!renderHourlyChart.activeBoros) {
       renderHourlyChart.activeBoros = new Set(BORO_ORDER);
     }
 
     const activeBoros = BORO_ORDER.filter((boro) => renderHourlyChart.activeBoros.has(boro));
+    const grouped = d3.group(data, (d) => d.Boro);
+    const hours = d3.range(0, 24);
+    const maxValue =
+      d3.max(data.filter((d) => renderHourlyChart.activeBoros.has(d.Boro)), (d) => d.avg_volume) || 1;
 
     const x = d3.scaleLinear().domain([0, 23]).range([0, innerWidth]);
     const y = d3.scaleLinear().domain([0, maxValue * 1.1]).range([innerHeight, 0]);
@@ -84,17 +91,24 @@
     g.append("text")
       .attr("class", "traffic-axis-label")
       .attr("x", innerWidth / 2)
-      .attr("y", innerHeight + 42)
+      .attr("y", innerHeight + 54)
       .attr("text-anchor", "middle")
       .text("Hour of day");
 
-    g.append("text")
+    const hourlyYAxisLabel = g.append("text")
       .attr("class", "traffic-axis-label")
       .attr("transform", "rotate(-90)")
       .attr("x", -innerHeight / 2)
-      .attr("y", -46)
-      .attr("text-anchor", "middle")
-      .text("Avg volume");
+      .attr("y", -66)
+      .attr("text-anchor", "middle");
+
+    hourlyYAxisLabel
+      .selectAll("tspan")
+      .data(["Avg volume", "(vehicles/hour)"])
+      .join("tspan")
+      .attr("x", -innerHeight / 2)
+      .attr("dy", (d, i) => (i === 0 ? 0 : 16))
+      .text((d) => d);
 
     const line = d3
       .line()
@@ -149,35 +163,41 @@
     const legend = d3.select("#traffic-hourly-legend");
     if (!legend.empty()) {
       legend.selectAll("*").remove();
+      legend
+        .style("display", "flex")
+        .style("flex-direction", "row")
+        .style("flex-wrap", "wrap")
+        .style("gap", "8px 14px")
+        .style("align-items", "center");
 
-    const items = legend
-      .selectAll("div")
-      .data(BORO_ORDER)
-      .join("div")
-      .attr("class", "traffic-legend__item")
-      .style("cursor", "pointer")
-      .on("click", (event, boro) => {
-        const nextState = new Set(renderHourlyChart.activeBoros);
-        if (nextState.has(boro)) {
-          if (nextState.size === 1) return;
-          nextState.delete(boro);
-        } else {
-          nextState.add(boro);
-        }
-        renderHourlyChart.activeBoros = nextState;
-        renderHourlyChart(data);
-      });
+      const items = legend
+        .selectAll("div")
+        .data(BORO_ORDER)
+        .join("div")
+        .attr("class", "traffic-legend__item")
+        .style("cursor", "pointer")
+        .on("click", (event, boro) => {
+          const nextState = new Set(renderHourlyChart.activeBoros);
+          if (nextState.has(boro)) {
+            if (nextState.size === 1) return;
+            nextState.delete(boro);
+          } else {
+            nextState.add(boro);
+          }
+          renderHourlyChart.activeBoros = nextState;
+          renderHourlyChart(data);
+        });
 
-    items
-      .append("span")
-      .attr("class", "traffic-legend__swatch")
-      .style("background", (d) => BORO_COLORS[d] || "#cccccc")
-      .style("opacity", (d) => (renderHourlyChart.activeBoros.has(d) ? 1 : 0.4));
+      items
+        .append("span")
+        .attr("class", "traffic-legend__swatch")
+        .style("background", (d) => BORO_COLORS[d] || "#cccccc")
+        .style("opacity", (d) => (renderHourlyChart.activeBoros.has(d) ? 1 : 0.4));
 
-    items
-      .append("span")
-      .style("opacity", (d) => (renderHourlyChart.activeBoros.has(d) ? 1 : 0.4))
-      .text((d) => d);
+      items
+        .append("span")
+        .style("opacity", (d) => (renderHourlyChart.activeBoros.has(d) ? 1 : 0.4))
+        .text((d) => d);
     }
   }
 
@@ -190,7 +210,7 @@
     const node = container.node();
     const width = node.clientWidth || 420;
     const height = node.clientHeight || 260;
-    const margin = { top: 24, right: 18, bottom: 52, left: 56 };
+    const margin = { top: 24, right: 18, bottom: 72, left: 90 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -238,17 +258,24 @@
     g.append("text")
       .attr("class", "traffic-axis-label")
       .attr("x", innerWidth / 2)
-      .attr("y", innerHeight + 42)
+      .attr("y", innerHeight + 58)
       .attr("text-anchor", "middle")
       .text("Borough");
 
-    g.append("text")
+    const weekendYAxisLabel = g.append("text")
       .attr("class", "traffic-axis-label")
       .attr("transform", "rotate(-90)")
       .attr("x", -innerHeight / 2)
-      .attr("y", -46)
-      .attr("text-anchor", "middle")
-      .text("Avg volume");
+      .attr("y", -72)
+      .attr("text-anchor", "middle");
+
+    weekendYAxisLabel
+      .selectAll("tspan")
+      .data(["Avg volume", "(vehicles/hour)"])
+      .join("tspan")
+      .attr("x", -innerHeight / 2)
+      .attr("dy", (d, i) => (i === 0 ? 0 : 16))
+      .text((d) => d);
 
     const tooltip = getTooltip();
 
@@ -285,6 +312,46 @@
         d3.select(this).attr("fill", d.color);
         tooltip.style("opacity", 0);
       });
+
+    barGroups
+      .selectAll("text")
+      .data((d) => [
+        { label: "Weekday", value: d.weekday, boro: d.boro },
+        { label: "Weekend", value: d.weekend, boro: d.boro },
+      ])
+      .join("text")
+      .attr("class", "mobility-bars__bar-label")
+      .attr("x", (d) => x1(d.label) + x1.bandwidth() / 2)
+      .attr("y", (d) => y(d.value) - 6)
+      .attr("text-anchor", "middle")
+      .text((d) => formatVolume(d.value));
+
+    const legend = d3.select("#traffic-weekend-legend");
+    if (!legend.empty()) {
+      legend.selectAll("*").remove();
+      legend
+        .style("display", "flex")
+        .style("flex-direction", "row")
+        .style("flex-wrap", "wrap")
+        .style("gap", "8px 14px")
+        .style("align-items", "center");
+
+      const items = legend
+        .selectAll("div")
+        .data([
+          { label: "Weekday", color: "#9c7cff" },
+          { label: "Weekend", color: "#ffb347" },
+        ])
+        .join("div")
+        .attr("class", "traffic-legend__item");
+
+      items
+        .append("span")
+        .attr("class", "traffic-legend__swatch")
+        .style("background", (d) => d.color);
+
+      items.append("span").text((d) => d.label);
+    }
   }
 
   function renderWeekdayChart(data) {
@@ -296,7 +363,7 @@
     const node = container.node();
     const width = node.clientWidth || 420;
     const height = node.clientHeight || 260;
-    const margin = { top: 20, right: 18, bottom: 52, left: 56 };
+    const margin = { top: 20, right: 18, bottom: 72, left: 90 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -334,17 +401,24 @@
     g.append("text")
       .attr("class", "traffic-axis-label")
       .attr("x", innerWidth / 2)
-      .attr("y", innerHeight + 42)
+      .attr("y", innerHeight + 58)
       .attr("text-anchor", "middle")
       .text("Day of week");
 
-    g.append("text")
+    const weekdayYAxisLabel = g.append("text")
       .attr("class", "traffic-axis-label")
       .attr("transform", "rotate(-90)")
       .attr("x", -innerHeight / 2)
-      .attr("y", -46)
-      .attr("text-anchor", "middle")
-      .text("Avg volume");
+      .attr("y", -72)
+      .attr("text-anchor", "middle");
+
+    weekdayYAxisLabel
+      .selectAll("tspan")
+      .data(["Avg volume", "(vehicles/hour)"])
+      .join("tspan")
+      .attr("x", -innerHeight / 2)
+      .attr("dy", (d, i) => (i === 0 ? 0 : 16))
+      .text((d) => d);
 
     const tooltip = getTooltip();
 
@@ -373,6 +447,41 @@
         d3.select(this).attr("fill", baseColor);
         tooltip.style("opacity", 0);
       });
+
+    g.selectAll("text.bar-value")
+      .data(sorted)
+      .join("text")
+      .attr("class", "mobility-bars__bar-label")
+      .attr("x", (d) => x(dayOrder[d.weekday_index]) + x.bandwidth() / 2)
+      .attr("y", (d) => y(d.avg_volume) - 6)
+      .attr("text-anchor", "middle")
+      .text((d) => formatVolume(d.avg_volume));
+
+    const legend = d3.select("#traffic-weekdays-legend");
+    if (!legend.empty()) {
+      legend.selectAll("*").remove();
+      legend
+        .style("display", "grid")
+        .style("grid-template-columns", "repeat(2, minmax(0, 1fr))")
+        .style("gap", "8px 10px")
+        .style("align-items", "center");
+
+      const items = legend
+        .selectAll("div")
+        .data([
+          { label: "Weekday", color: weekdayColor },
+          { label: "Weekend", color: weekendColor },
+        ])
+        .join("div")
+        .attr("class", "traffic-legend__item");
+
+      items
+        .append("span")
+        .attr("class", "traffic-legend__swatch")
+        .style("background", (d) => d.color);
+
+      items.append("span").text((d) => d.label);
+    }
   }
 
   function renderWeeklyShare(data) {
@@ -444,6 +553,30 @@
       .attr("stroke-width", 2.5)
       .attr("paint-order", "stroke")
       .text((d) => `${Math.round((d.data.value / total) * 100)}%`);
+
+    const legend = d3.select("#traffic-weekly-share-legend");
+    if (!legend.empty()) {
+      legend.selectAll("*").remove();
+      legend
+        .style("display", "flex")
+        .style("flex-direction", "row")
+        .style("flex-wrap", "wrap")
+        .style("gap", "8px 14px")
+        .style("align-items", "center");
+
+      const items = legend
+        .selectAll("div")
+        .data(pieData)
+        .join("div")
+        .attr("class", "traffic-legend__item");
+
+      items
+        .append("span")
+        .attr("class", "traffic-legend__swatch")
+        .style("background", (d) => d.color);
+
+      items.append("span").text((d) => d.label);
+    }
   }
 
   function renderCorridorChart(data) {
@@ -455,7 +588,7 @@
     const node = container.node();
     const width = node.clientWidth || 420;
     const height = node.clientHeight || 260;
-    const margin = { top: 20, right: 20, bottom: 24, left: 160 };
+    const margin = { top: 20, right: 40, bottom: 62, left: 340 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -479,7 +612,7 @@
     g.append("g")
       .attr("class", "mobility-bars__axis mobility-bars__axis--x")
       .attr("transform", `translate(0,${innerHeight})`)
-      .call(d3.axisBottom(x).ticks(4).tickFormat(formatVolume));
+      .call(d3.axisBottom(x).ticks(4).tickFormat(formatVolumeDetailed));
 
     g.append("g").attr("class", "mobility-bars__axis mobility-bars__axis--y").call(
       d3.axisLeft(y).tickFormat((d) => {
@@ -487,6 +620,21 @@
         return parts[0] || d;
       }),
     );
+
+    g.append("text")
+      .attr("class", "traffic-axis-label")
+      .attr("x", innerWidth / 2)
+      .attr("y", innerHeight + 52)
+      .attr("text-anchor", "middle")
+      .text("Total volume (vehicles/hour)");
+
+    g.append("text")
+      .attr("class", "traffic-axis-label")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -innerHeight / 2)
+      .attr("y", -320)
+      .attr("text-anchor", "middle")
+      .text("Corridor");
 
     const tooltip = getTooltip();
 
@@ -514,28 +662,39 @@
         d3.select(this).attr("fill", baseColor);
         tooltip.style("opacity", 0);
       });
+
+    const labelGap = 36;
+    g.selectAll("text.corridor-value")
+      .data(topData)
+      .join("text")
+      .attr("class", "mobility-bars__bar-label")
+      .attr("x", (d) => Math.min(x(d.total_volume) + labelGap, innerWidth + margin.right - labelGap))
+      .attr("y", (d) => y(d.corridor) + y.bandwidth() / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", "start")
+      .text((d) => formatVolumeDetailed(d.total_volume));
   }
 
   Promise.all([
-    d3.csv(FILES.hourly, (d) => ({
+    loadCsv(FILES.hourly, (d) => ({
       Boro: d.Boro?.trim() || "",
       hour: Number(d.hour),
       avg_volume: Number(d.avg_volume),
     })),
-    d3.csv(FILES.weekend, (d) => ({
+    loadCsv(FILES.weekend, (d) => ({
       Boro: d.Boro?.trim() || "",
       is_weekend: String(d.is_weekend).toLowerCase() === "true",
       avg_volume: Number(d.avg_volume),
     })),
-    d3.csv(FILES.weekday, (d) => ({
+    loadCsv(FILES.weekday, (d) => ({
       weekday_index: Number(d.weekday_index),
       avg_volume: Number(d.avg_volume),
     })),
-    d3.csv(FILES.weekshare, (d) => ({
+    loadCsv(FILES.weekshare, (d) => ({
       Boro: d.Boro?.trim() || "",
       avg_volume: Number(d.avg_volume),
     })),
-    d3.csv(FILES.corridors, (d) => ({
+    loadCsv(FILES.corridors, (d) => ({
       corridor: d.corridor,
       total_volume: Number(d.total_volume),
     })),

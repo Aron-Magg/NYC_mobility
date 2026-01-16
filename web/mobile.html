@@ -8,18 +8,14 @@
     <title>NYC Mobility - Clock Only</title>
 
     <style>
-        :root {
-            color-scheme: dark;
-        }
-
         body {
             margin: 0;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #1c1c1c;
-            color: #f2f3f4;
+            background: #f9f4ea;
+            color: #111;
             font-family: "Consolas", "Courier New", monospace;
         }
 
@@ -32,69 +28,52 @@
             text-align: center;
         }
 
-        .ffs-clock {
+        .grand-central-clock {
             width: 180px;
             height: 180px;
         }
 
-        .ffs-clock__face {
+        .grand-central-clock__face {
             width: 100%;
             height: 100%;
             display: block;
         }
 
-        .ffs-clock__rim {
-            fill: #d9d9d9;
-            stroke: #8b8b8b;
-            stroke-width: 4;
+        .grand-central-clock__rim {
+            fill: #cdb77a;
+            stroke: #8a6b2d;
+            stroke-width: 8;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
         }
 
-        .ffs-clock__dial {
-            fill: #f4f4f4;
-            stroke: #c0c0c0;
+        .grand-central-clock__dial {
+            fill: #f9f4ea;
+            stroke: #d6c6a5;
             stroke-width: 2;
         }
 
-        .ffs-clock__tick {
-            stroke: #101010;
-            stroke-linecap: square;
-        }
-
-        .ffs-clock__tick--hour {
-            stroke-width: 6;
-        }
-
-        .ffs-clock__tick--minute {
-            stroke-width: 3;
-            opacity: 0.8;
-        }
-
-        .ffs-clock__hand {
-            stroke-linecap: square;
-            transform-origin: 100px 100px;
-        }
-
-        .ffs-clock__hand--hour {
+        .grand-central-clock__tick {
             stroke: #1a1a1a;
-            stroke-width: 8;
-        }
-
-        .ffs-clock__hand--minute {
-            stroke: #1a1a1a;
-            stroke-width: 6;
-        }
-
-        .ffs-clock__hand--second {
-            stroke: #d8342a;
-            stroke-width: 2.5;
-        }
-
-        .ffs-clock__hub {
             fill: #1a1a1a;
         }
 
-        .ffs-clock__second-dot {
-            fill: #d8342a;
+        .grand-central-clock__hand {
+            fill: #1a1a1a;
+            stroke: #1a1a1a;
+            stroke-width: 1;
+            transform-box: view-box;
+            transform-origin: 100px 100px;
+        }
+
+        .grand-central-clock__hub {
+            fill: #1a1a1a;
+        }
+
+        .grand-central-clock__numeral {
+            fill: #111;
+            font-family: "ConsolasBold", "Consolas", "Courier New", monospace;
+            font-size: 12px;
+            letter-spacing: 1px;
         }
 
         .message {
@@ -107,18 +86,19 @@
 
 <body>
     <div class="clock-wrap">
-        <div class="ffs-clock" aria-label="Current time">
-            <svg class="ffs-clock__face" viewBox="0 0 200 200" role="img" aria-hidden="true">
-                <circle cx="100" cy="100" r="96" class="ffs-clock__rim" />
-                <circle cx="100" cy="100" r="88" class="ffs-clock__dial" />
-                <g class="ffs-clock__minute-ticks"></g>
-                <g class="ffs-clock__hour-ticks"></g>
-                <g class="ffs-clock__hands">
-                    <line x1="100" y1="100" x2="100" y2="52" class="ffs-clock__hand ffs-clock__hand--hour" />
-                    <line x1="100" y1="100" x2="100" y2="28" class="ffs-clock__hand ffs-clock__hand--minute" />
-                    <line x1="100" y1="112" x2="100" y2="22" class="ffs-clock__hand ffs-clock__hand--second" />
-                    <circle cx="100" cy="100" r="6" class="ffs-clock__hub" />
-                    <circle cx="100" cy="44" r="7" class="ffs-clock__second-dot" />
+        <div class="grand-central-clock" aria-label="Current time">
+            <svg class="grand-central-clock__face" viewBox="0 0 200 200" role="img" aria-hidden="true">
+                <circle cx="100" cy="100" r="96" class="grand-central-clock__rim" />
+                <circle cx="100" cy="100" r="88" class="grand-central-clock__dial" />
+                <g class="grand-central-clock__minute-ticks"></g>
+                <g class="grand-central-clock__hour-ticks"></g>
+                <g class="grand-central-clock__numbers"></g>
+                <g class="grand-central-clock__hands">
+                    <polygon class="grand-central-clock__hand grand-central-clock__hand--hour"
+                        points="96,106 104,106 102,98 100,58 98,98" />
+                    <polygon class="grand-central-clock__hand grand-central-clock__hand--minute"
+                        points="95,106 105,106 102,98 100,30 98,98" />
+                    <circle cx="100" cy="100" r="6" class="grand-central-clock__hub" />
                 </g>
             </svg>
         </div>
@@ -130,50 +110,58 @@
 
     <script>
         (function () {
-            const minuteTicks = document.querySelector(".ffs-clock__minute-ticks");
-            const hourTicks = document.querySelector(".ffs-clock__hour-ticks");
+            const minuteTicks = document.querySelector(".grand-central-clock__minute-ticks");
+            const hourTicks = document.querySelector(".grand-central-clock__hour-ticks");
+            const numerals = document.querySelector(".grand-central-clock__numbers");
+            if (!minuteTicks || !hourTicks) return;
+
+            minuteTicks.innerHTML = "";
+            hourTicks.innerHTML = "";
+            if (numerals) {
+                numerals.innerHTML = "";
+            }
 
             for (let i = 0; i < 60; i += 1) {
-                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                line.setAttribute("x1", "100");
-                line.setAttribute("y1", "10");
-                line.setAttribute("x2", "100");
-                line.setAttribute("y2", "18");
-                line.setAttribute("class", "ffs-clock__tick ffs-clock__tick--minute");
-                line.setAttribute("transform", `rotate(${i * 6} 100 100)`);
-                minuteTicks.appendChild(line);
+                const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                dot.setAttribute("cx", "100");
+                dot.setAttribute("cy", "16");
+                dot.setAttribute("r", "1.6");
+                dot.setAttribute("class", "grand-central-clock__tick");
+                dot.setAttribute("transform", `rotate(${i * 6} 100 100)`);
+                minuteTicks.appendChild(dot);
             }
 
-            for (let i = 0; i < 12; i += 1) {
-                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                line.setAttribute("x1", "100");
-                line.setAttribute("y1", "10");
-                line.setAttribute("x2", "100");
-                line.setAttribute("y2", "28");
-                line.setAttribute("class", "ffs-clock__tick ffs-clock__tick--hour");
-                line.setAttribute("transform", `rotate(${i * 30} 100 100)`);
-                hourTicks.appendChild(line);
+            if (numerals) {
+                const labels = ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+                const radius = 72;
+                labels.forEach((label, index) => {
+                    const angle = (index * 30 - 90) * (Math.PI / 180);
+                    const x = 100 + Math.cos(angle) * radius;
+                    const y = 100 + Math.sin(angle) * radius;
+                    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                    text.setAttribute("class", "grand-central-clock__numeral");
+                    text.setAttribute("x", x.toFixed(2));
+                    text.setAttribute("y", y.toFixed(2));
+                    text.setAttribute("text-anchor", "middle");
+                    text.setAttribute("dominant-baseline", "middle");
+                    text.textContent = label;
+                    numerals.appendChild(text);
+                });
             }
 
-            const hourHand = document.querySelector(".ffs-clock__hand--hour");
-            const minuteHand = document.querySelector(".ffs-clock__hand--minute");
-            const secondHand = document.querySelector(".ffs-clock__hand--second");
-            const secondDot = document.querySelector(".ffs-clock__second-dot");
+            const hourHand = document.querySelector(".grand-central-clock__hand--hour");
+            const minuteHand = document.querySelector(".grand-central-clock__hand--minute");
 
             function updateClock() {
                 const now = new Date();
-                const seconds = now.getSeconds();
                 const minutes = now.getMinutes();
                 const hours = now.getHours() % 12;
 
-                const secondAngle = seconds * 6;
-                const minuteAngle = minutes * 6 + seconds * 0.1;
+                const minuteAngle = minutes * 6;
                 const hourAngle = hours * 30 + minutes * 0.5;
 
                 if (hourHand) hourHand.style.transform = `rotate(${hourAngle}deg)`;
                 if (minuteHand) minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
-                if (secondHand) secondHand.style.transform = `rotate(${secondAngle}deg)`;
-                if (secondDot) secondDot.style.transform = `rotate(${secondAngle}deg)`;
             }
 
             updateClock();

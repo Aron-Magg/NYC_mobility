@@ -8,16 +8,18 @@
 
   const RIDERSHIP_URL = "../data/RidershipMode_Full Data_data.csv";
   const MODE_META = {
-    Subway: { label: "Subway", color: "#ff3bff" },
-    Bus: { label: "Bus", color: "#00bfff" },
-    Taxi: { label: "Taxi/FHV", color: "#ffd447" },
-    Citibike: { label: "Citi Bike", color: "#1ad15b" },
+    Subway: { label: "Subway", color: "#da1009" },
+    Bus: { label: "Bus", color: "#09d0da" },
+    Taxi: { label: "Taxi/FHV", color: "#ede924" },
+    Citibike: { label: "Citi Bike", color: "#00C853" },
   };
   const MODE_ORDER = ["Subway", "Bus", "Taxi", "Citibike"];
 
+  const loadCsv = window.loadCsvMaybeParts || d3.csv;
+
   function getRidershipData() {
     if (!window.__nycRidershipDataPromise) {
-      window.__nycRidershipDataPromise = d3.csv(RIDERSHIP_URL, (row) => ({
+      window.__nycRidershipDataPromise = loadCsv(RIDERSHIP_URL, (row) => ({
         mode: row.Mode?.trim() || "",
         year: Number(row.Year),
         ridership: Number(row.Ridership),

@@ -35,6 +35,10 @@
     margin: 24px 0;
 }
 
+.traffic-note {
+    grid-column: 1 / -1;
+}
+
 .traffic-panel {
     padding: 14px 16px;
     border-radius: 16px;
@@ -45,7 +49,7 @@
 
 .traffic-panel__title {
     font-family: "ConsolasBold", monospace;
-    font-size: 12px;
+    font-size: 18px;
     color: #f2f3f4;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -68,7 +72,7 @@
 
 .traffic-axis-label {
     fill: #f2f3f4;
-    font-size: 11px;
+    font-size: 16px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
 }

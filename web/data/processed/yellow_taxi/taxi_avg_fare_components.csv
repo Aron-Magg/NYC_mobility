@@ -1,0 +1,16 @@
+service,component,avg_amount
+yellow,Base fare,13.0607
+yellow,Tips,2.1076
+yellow,Tolls,0.3357
+yellow,Taxes & funds,0.4969
+yellow,Surcharges,1.0702
+green,Base fare,12.9047
+green,Tips,1.1595
+green,Tolls,0.1472
+green,Taxes & funds,0.4817
+green,Surcharges,0.6303
+hvfhs,Base fare,20.8937
+hvfhs,Tips,0.8347
+hvfhs,Tolls,0.9624
+hvfhs,Taxes & funds,2.3413
+hvfhs,Surcharges,1.1216

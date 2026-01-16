@@ -6,6 +6,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // How far from the top of the viewport the chapter title should land
   const BASE_OFFSET = 10; // px extra below the fixed nav
 
+  // Duration of the smooth scroll between chapters (ms)
+  const SCROLL_DURATION_MS = 1800;
+
   const navOuter = document.querySelector(".top-nav-outer");
   function getTopOffset() {
     if (!navOuter) return BASE_OFFSET;
@@ -47,6 +50,62 @@ document.addEventListener("DOMContentLoaded", () => {
   function getDocumentY(el) {
     const rect = el.getBoundingClientRect();
     return rect.top + getScrollY();
+  }
+
+  const homeSection = document.getElementById("home");
+  function updateHomeOffset() {
+    if (!homeSection) return;
+    homeSection.style.paddingTop = `${getTopOffset()}px`;
+  }
+
+  function easeInOutCubic(t) {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  let activeScrollRaf = null;
+
+  function smoothScrollToTarget(getTargetY, durationMs, attempt = 0) {
+    const prefersReduced =
+      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReduced || durationMs <= 0) {
+      window.scrollTo(0, getTargetY());
+      return;
+    }
+
+    if (activeScrollRaf) {
+      cancelAnimationFrame(activeScrollRaf);
+      activeScrollRaf = null;
+    }
+
+    const startY = getScrollY();
+    const startTime = performance.now();
+    const maxAttempts = 2;
+
+    const step = (now) => {
+      const elapsed = now - startTime;
+      const t = Math.min(1, elapsed / durationMs);
+      const eased = easeInOutCubic(t);
+      const targetY = getTargetY();
+      window.scrollTo(0, startY + (targetY - startY) * eased);
+      if (t < 1) {
+        activeScrollRaf = requestAnimationFrame(step);
+      } else {
+        activeScrollRaf = null;
+        const finalTarget = getTargetY();
+        window.scrollTo(0, finalTarget);
+        if (attempt < maxAttempts) {
+          setTimeout(() => {
+            const settleTarget = getTargetY();
+            const diff = Math.abs(getScrollY() - settleTarget);
+            if (diff > 2) {
+              smoothScrollToTarget(getTargetY, Math.min(450, durationMs * 0.4), attempt + 1);
+            }
+          }, 80);
+        }
+      }
+    };
+
+    activeScrollRaf = requestAnimationFrame(step);
   }
 
   /**
@@ -138,26 +197,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const section = document.querySelector(href);
         if (section) {
-          const anchor = section.querySelector("h2") || section;
+          const anchor = section.querySelector("h2, h1") || section;
 
-          // Element's Y position in the document
-          const elementPosition = getDocumentY(anchor);
+          const getTargetY = () => {
+            const elementPosition = getDocumentY(anchor);
+            const offsetPosition = elementPosition - getTopOffset();
+            const maxScroll = Math.max(
+              0,
+              document.documentElement.scrollHeight - window.innerHeight,
+            );
+            return Math.max(0, Math.min(offsetPosition, maxScroll));
+          };
 
-          // We want the anchor to end up TOP_OFFSET px from the top of the viewport
-          const offsetPosition = elementPosition - getTopOffset();
-
-          // Clamp target scroll so we never go beyond [0, maxScroll]
-          const maxScroll = Math.max(
-            0,
-            document.documentElement.scrollHeight - window.innerHeight,
-          );
-
-          const target = Math.max(0, Math.min(offsetPosition, maxScroll));
-
-          window.scrollTo({
-            top: target,
-            behavior: "smooth",
-          });
+          smoothScrollToTarget(getTargetY, SCROLL_DURATION_MS);
         }
       }
 
@@ -322,10 +374,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Set initial track + indicator position on load (fonts/layout can shift things)
   updateTrackBounds();
+  updateHomeOffset();
   updateIndicator();
 
   window.addEventListener("load", () => {
     updateTrackBounds();
+    updateHomeOffset();
     updateIndicator();
   });
 
@@ -338,6 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("resize", () => {
     window.requestAnimationFrame(() => {
       updateTrackBounds();
+      updateHomeOffset();
       updateIndicator();
     });
   });
@@ -347,58 +402,62 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 60000);
 
   /* ========================================
-     FFS CLOCK
+     GRAND CENTRAL CLOCK
      ======================================== */
 
   function initFfsClock() {
-    const minuteTicks = document.querySelector(".ffs-clock__minute-ticks");
-    const hourTicks = document.querySelector(".ffs-clock__hour-ticks");
+    const minuteTicks = document.querySelector(".grand-central-clock__minute-ticks");
+    const hourTicks = document.querySelector(".grand-central-clock__hour-ticks");
+    const numerals = document.querySelector(".grand-central-clock__numbers");
     if (!minuteTicks || !hourTicks) return;
 
     minuteTicks.innerHTML = "";
     hourTicks.innerHTML = "";
+    if (numerals) {
+      numerals.innerHTML = "";
+    }
 
     for (let i = 0; i < 60; i += 1) {
-      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      line.setAttribute("x1", "100");
-      line.setAttribute("y1", "10");
-      line.setAttribute("x2", "100");
-      line.setAttribute("y2", "18");
-      line.setAttribute("class", "ffs-clock__tick ffs-clock__tick--minute");
-      line.setAttribute("transform", `rotate(${i * 6} 100 100)`);
-      minuteTicks.appendChild(line);
+      const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      dot.setAttribute("cx", "100");
+      dot.setAttribute("cy", "16");
+      dot.setAttribute("r", "1.6");
+      dot.setAttribute("class", "grand-central-clock__tick");
+      dot.setAttribute("transform", `rotate(${i * 6} 100 100)`);
+      minuteTicks.appendChild(dot);
     }
 
-    for (let i = 0; i < 12; i += 1) {
-      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      line.setAttribute("x1", "100");
-      line.setAttribute("y1", "10");
-      line.setAttribute("x2", "100");
-      line.setAttribute("y2", "28");
-      line.setAttribute("class", "ffs-clock__tick ffs-clock__tick--hour");
-      line.setAttribute("transform", `rotate(${i * 30} 100 100)`);
-      hourTicks.appendChild(line);
+    if (numerals) {
+      const labels = ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
+      const radius = 72;
+      labels.forEach((label, index) => {
+        const angle = (index * 30 - 90) * (Math.PI / 180);
+        const x = 100 + Math.cos(angle) * radius;
+        const y = 100 + Math.sin(angle) * radius;
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("class", "grand-central-clock__numeral");
+        text.setAttribute("x", x.toFixed(2));
+        text.setAttribute("y", y.toFixed(2));
+        text.setAttribute("text-anchor", "middle");
+        text.setAttribute("dominant-baseline", "middle");
+        text.textContent = label;
+        numerals.appendChild(text);
+      });
     }
 
-    const hourHand = document.querySelector(".ffs-clock__hand--hour");
-    const minuteHand = document.querySelector(".ffs-clock__hand--minute");
-    const secondHand = document.querySelector(".ffs-clock__hand--second");
-    const secondDot = document.querySelector(".ffs-clock__second-dot");
+    const hourHand = document.querySelector(".grand-central-clock__hand--hour");
+    const minuteHand = document.querySelector(".grand-central-clock__hand--minute");
 
     function updateClock() {
       const now = new Date();
-      const seconds = now.getSeconds();
       const minutes = now.getMinutes();
       const hours = now.getHours() % 12;
 
-      const secondAngle = seconds * 6;
-      const minuteAngle = minutes * 6 + seconds * 0.1;
+      const minuteAngle = minutes * 6;
       const hourAngle = hours * 30 + minutes * 0.5;
 
       if (hourHand) hourHand.style.transform = `rotate(${hourAngle}deg)`;
       if (minuteHand) minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
-      if (secondHand) secondHand.style.transform = `rotate(${secondAngle}deg)`;
-      if (secondDot) secondDot.style.transform = `rotate(${secondAngle}deg)`;
     }
 
     updateClock();

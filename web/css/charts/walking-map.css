@@ -28,15 +28,9 @@
 
 /* Borough polygons only (no points for now) */
 .walking-map__borough {
-    fill: #0f7c3b; /* walking / park green */
     stroke: #101010;
     stroke-width: 0.8;
-    opacity: 0.9;
-}
-
-/* Hover */
-.walking-map__borough:hover {
-    fill: #1ad15b;
+    opacity: 0.95;
 }
 
 .walking-map__error {

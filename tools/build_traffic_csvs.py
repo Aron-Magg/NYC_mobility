@@ -6,6 +6,10 @@ import pandas as pd
 
 
 RAW_FILE = Path("data/raw_traffic_counts/Automated_Traffic_Volume_Counts.csv")
+RAW_PART_PATTERNS = [
+    "Automated_Traffic_Volume_Counts_part*.csv",
+    "Automated_Traffic_Volume_Counts.part*.csv",
+]
 OUT_DIR = Path("data/processed/traffic")
 
 CHUNK_SIZE = 250_000
@@ -37,9 +41,21 @@ def update_sum_count(target: pd.DataFrame, chunk_grouped: pd.DataFrame) -> pd.Da
     return combined
 
 
+def resolve_raw_files() -> list[Path]:
+    if RAW_FILE.exists():
+        return [RAW_FILE]
+    parts = []
+    for pattern in RAW_PART_PATTERNS:
+        parts.extend(RAW_FILE.parent.glob(pattern))
+    parts = sorted(parts)
+    if parts:
+        return parts
+    patterns = ", ".join(RAW_PART_PATTERNS)
+    raise SystemExit(f"Missing source file(s): {RAW_FILE} or {patterns}")
+
+
 def main() -> None:
-    if not RAW_FILE.exists():
-        raise SystemExit(f"Missing source file: {RAW_FILE}")
+    raw_files = resolve_raw_files()
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -53,66 +69,67 @@ def main() -> None:
 
     usecols = ["Boro", "Yr", "M", "D", "HH", "Vol", "street", "fromSt", "toSt", "Direction"]
 
-    for chunk in pd.read_csv(RAW_FILE, usecols=usecols, chunksize=CHUNK_SIZE):
-        chunk = chunk.dropna(subset=["Boro", "Yr", "M", "D", "HH", "Vol"])
-        chunk = chunk[chunk["Vol"] >= 0]
+    for raw_file in raw_files:
+        for chunk in pd.read_csv(raw_file, usecols=usecols, chunksize=CHUNK_SIZE):
+            chunk = chunk.dropna(subset=["Boro", "Yr", "M", "D", "HH", "Vol"])
+            chunk = chunk[chunk["Vol"] >= 0]
 
-        chunk["Boro"] = chunk["Boro"].map(normalize_boro)
-        chunk["Direction"] = chunk["Direction"].map(normalize_direction)
+            chunk["Boro"] = chunk["Boro"].map(normalize_boro)
+            chunk["Direction"] = chunk["Direction"].map(normalize_direction)
 
-        dates = pd.to_datetime(
-            dict(year=chunk["Yr"], month=chunk["M"], day=chunk["D"]),
-            errors="coerce",
-        )
-        chunk = chunk[dates.notna()].copy()
-        chunk["weekday"] = dates.dt.dayofweek
-        chunk["is_weekend"] = chunk["weekday"] >= 5
+            dates = pd.to_datetime(
+                dict(year=chunk["Yr"], month=chunk["M"], day=chunk["D"]),
+                errors="coerce",
+            )
+            chunk = chunk[dates.notna()].copy()
+            chunk["weekday"] = dates.dt.dayofweek
+            chunk["is_weekend"] = chunk["weekday"] >= 5
 
-        hour_group = (
-            chunk.groupby(["Boro", "HH"])["Vol"]
-            .agg(volume_sum="sum", volume_count="count")
-            .sort_index()
-        )
-        hourly = update_sum_count(hourly, hour_group)
+            hour_group = (
+                chunk.groupby(["Boro", "HH"])["Vol"]
+                .agg(volume_sum="sum", volume_count="count")
+                .sort_index()
+            )
+            hourly = update_sum_count(hourly, hour_group)
 
-        month_group = (
-            chunk.groupby(["Boro", "M"])["Vol"]
-            .agg(volume_sum="sum", volume_count="count")
-            .sort_index()
-        )
-        monthly = update_sum_count(monthly, month_group)
+            month_group = (
+                chunk.groupby(["Boro", "M"])["Vol"]
+                .agg(volume_sum="sum", volume_count="count")
+                .sort_index()
+            )
+            monthly = update_sum_count(monthly, month_group)
 
-        weekday_group = (
-            chunk.groupby(["Boro", "is_weekend"])["Vol"]
-            .agg(volume_sum="sum", volume_count="count")
-            .sort_index()
-        )
-        weekday = update_sum_count(weekday, weekday_group)
+            weekday_group = (
+                chunk.groupby(["Boro", "is_weekend"])["Vol"]
+                .agg(volume_sum="sum", volume_count="count")
+                .sort_index()
+            )
+            weekday = update_sum_count(weekday, weekday_group)
 
-        borough_share_group = (
-            chunk.groupby(["Boro"])["Vol"]
-            .agg(volume_sum="sum", volume_count="count")
-            .sort_index()
-        )
-        borough_share = update_sum_count(borough_share, borough_share_group)
+            borough_share_group = (
+                chunk.groupby(["Boro"])["Vol"]
+                .agg(volume_sum="sum", volume_count="count")
+                .sort_index()
+            )
+            borough_share = update_sum_count(borough_share, borough_share_group)
 
-        direction_group = (
-            chunk.groupby(["Boro", "Direction"])["Vol"]
-            .agg(volume_sum="sum", volume_count="count")
-            .sort_index()
-        )
-        direction = update_sum_count(direction, direction_group)
+            direction_group = (
+                chunk.groupby(["Boro", "Direction"])["Vol"]
+                .agg(volume_sum="sum", volume_count="count")
+                .sort_index()
+            )
+            direction = update_sum_count(direction, direction_group)
 
-        day_group = (
-            chunk.groupby(["weekday"])["Vol"]
-            .agg(volume_sum="sum", volume_count="count")
-            .sort_index()
-        )
-        day_of_week = update_sum_count(day_of_week, day_group)
+            day_group = (
+                chunk.groupby(["weekday"])["Vol"]
+                .agg(volume_sum="sum", volume_count="count")
+                .sort_index()
+            )
+            day_of_week = update_sum_count(day_of_week, day_group)
 
-        chunk["corridor"] = chunk.apply(make_corridor, axis=1)
-        corridor_group = chunk.groupby("corridor")["Vol"].sum()
-        corridor = corridor.add(corridor_group, fill_value=0)
+            chunk["corridor"] = chunk.apply(make_corridor, axis=1)
+            corridor_group = chunk.groupby("corridor")["Vol"].sum()
+            corridor = corridor.add(corridor_group, fill_value=0)
 
     hourly_out = (
         hourly.reset_index()

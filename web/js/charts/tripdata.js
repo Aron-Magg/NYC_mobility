@@ -1,50 +1,74 @@
 // js/charts/tripdata.js
 // Citi Bike tripdata visuals from pre-aggregated CSVs
 (function () {
-  if (typeof d3 === "undefined") {
-    console.error("D3 not found. Make sure d3.v7 is loaded before this script.");
-    return;
-  }
-
-  const DATA_BASE = "data/processed/tripdata";
-  const FILES = {
-    flows: `${DATA_BASE}/top_flows.csv`,
-    stations: `${DATA_BASE}/top_start_stations.csv`,
-    hourly: `${DATA_BASE}/hourly_by_user.csv`,
-    duration: `${DATA_BASE}/duration_bins.csv`,
-    members: `${DATA_BASE}/member_share.csv`,
-    rideable: `${DATA_BASE}/rideable_type_share.csv`,
-    boroughs: "data/geo/nyc_boroughs.geojson",
-  };
-
-  const USER_COLORS = {
-    member: "#9c7cff",
-    casual: "#ffb347",
-  };
-
-  const TOOLTIP_CLASS = "tripdata-tooltip";
-
-  function getTooltip() {
-    let tooltip = d3.select("body").select(`.${TOOLTIP_CLASS}`);
-    if (tooltip.empty()) {
-      tooltip = d3.select("body").append("div").attr("class", TOOLTIP_CLASS);
+  function initTripdataCharts() {
+    if (typeof d3 === "undefined") {
+      console.error("D3 not found. Make sure d3.v7 is loaded before this script.");
+      return;
     }
-    return tooltip;
-  }
 
-  function formatNumber(value) {
-    if (!Number.isFinite(value)) return "0";
-    const fmt = d3.format(".2s");
-    return fmt(value).replace("G", "B");
-  }
+    const mapContainer = d3.select("#bike-flow-map");
+    if (mapContainer.empty()) return;
 
-  function renderFlowMap(flows, boroughs) {
+    const DATA_BASE = "data/processed/tripdata";
+    const FILES = {
+      routes: `${DATA_BASE}/top_routes.geojson`,
+      stations: `${DATA_BASE}/top_start_stations.csv`,
+      hourly: `${DATA_BASE}/hourly_by_user.csv`,
+      duration: `${DATA_BASE}/duration_bins.csv`,
+      members: `${DATA_BASE}/member_share.csv`,
+      rideable: `${DATA_BASE}/rideable_type_share.csv`,
+      boroughs: "data/geo/nyc_boroughs.geojson",
+    };
+
+    const loadCsv = window.loadCsvMaybeParts || d3.csv;
+
+    const USER_COLORS = {
+      member: "#C2185B",
+      casual: "#C65D00",
+    };
+
+    const TOOLTIP_CLASS = "tripdata-tooltip";
+
+    function getTooltip() {
+      let tooltip = d3.select("body").select(`.${TOOLTIP_CLASS}`);
+      if (tooltip.empty()) {
+        tooltip = d3.select("body").append("div").attr("class", TOOLTIP_CLASS);
+      }
+      return tooltip;
+    }
+
+    function formatNumber(value) {
+      if (!Number.isFinite(value)) return "0";
+      const fmt = d3.format(".2s");
+      return fmt(value).replace("G", "B");
+    }
+
+    function styleLegendRow(legend) {
+      legend
+        .style("display", "flex")
+        .style("flex-direction", "row")
+        .style("flex-wrap", "wrap")
+        .style("gap", "8px 14px")
+        .style("align-items", "center");
+    }
+
+    function renderFlowMap(routes, boroughs) {
     const container = d3.select("#bike-flow-map");
     if (container.empty()) return;
 
     container.selectAll("svg").remove();
 
-    const node = container.node();
+    if (!boroughs || !Array.isArray(boroughs.features)) {
+      container.append("p").attr("class", "overview-map__error").text("Flow map data unavailable.");
+      return;
+    }
+
+    if (!routes || !Array.isArray(routes.features)) {
+      container.append("p").attr("class", "overview-map__error").text("Route data unavailable.");
+      return;
+    }
+
     const width = 900;
     const height = 520;
 
@@ -53,10 +77,43 @@
       .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("preserveAspectRatio", "xMidYMid meet");
 
-    const projection = d3.geoMercator().fitSize([width, height], boroughs);
+    const routeFeatures = routes.features
+      .filter((feature) => feature.geometry && feature.geometry.type)
+      .sort((a, b) => (b.properties?.trip_count || 0) - (a.properties?.trip_count || 0))
+      .slice(0, 10);
+
+    if (!routeFeatures.length) {
+      container.append("p").attr("class", "overview-map__error").text("No route data available.");
+      return;
+    }
+
+    const projection = d3.geoMercator().fitExtent(
+      [
+        [36, 36],
+        [width - 36, height - 36],
+      ],
+      boroughs,
+    );
     const path = d3.geoPath(projection);
 
-    svg
+    const mapGroup = svg.append("g");
+
+    const routeBounds = path.bounds({ type: "FeatureCollection", features: routeFeatures });
+    const [[x0, y0], [x1, y1]] = routeBounds;
+    const boundWidth = x1 - x0;
+    const boundHeight = y1 - y0;
+    if (boundWidth > 0 && boundHeight > 0) {
+      const padding = 64;
+      const scale = Math.min(
+        (width - padding * 2) / boundWidth,
+        (height - padding * 2) / boundHeight,
+      );
+      const translateX = (width - scale * (x0 + x1)) / 2;
+      const translateY = (height - scale * (y0 + y1)) / 2;
+      mapGroup.attr("transform", `translate(${translateX},${translateY}) scale(${scale})`);
+    }
+
+    mapGroup
       .append("g")
       .selectAll("path")
       .data(boroughs.features)
@@ -66,62 +123,322 @@
       .attr("stroke", "#0a0a0a")
       .attr("stroke-width", 0.8);
 
-    const legend = svg
-      .append("g")
-      .attr("transform", "translate(24,24)")
-      .attr("class", "overview-map__legend-item");
+    const palette = [
+      "#5bbcff",
+      "#5fe27b",
+      "#ffb347",
+      "#ff7eb6",
+      "#9f86ff",
+      "#3fc0ff",
+      "#ffd54a",
+      "#2dd4bf",
+      "#ff7f73",
+      "#7aa8ff",
+    ];
 
-    legend
-      .append("rect")
-      .attr("width", 10)
-      .attr("height", 10)
-      .attr("fill", "#00bfff")
-      .attr("rx", 2);
-
-    legend
-      .append("text")
-      .attr("x", 16)
-      .attr("y", 9)
-      .attr("fill", "#f2f3f4")
-      .attr("font-size", 11)
-      .text("Top flows");
-
-    const maxTrips = d3.max(flows, (d) => d.trip_count) || 1;
-    const widthScale = d3.scaleSqrt().domain([0, maxTrips]).range([1, 7]);
+    const colorScale = d3.scaleOrdinal().domain(d3.range(routeFeatures.length)).range(palette);
     const tooltip = getTooltip();
 
-    svg
-      .append("g")
-      .selectAll("path")
-      .data(flows)
-      .join("path")
-      .attr("d", (d) => {
-        const start = projection([d.start_lng, d.start_lat]);
-        const end = projection([d.end_lng, d.end_lat]);
-        if (!start || !end) return "";
-        return `M${start[0]},${start[1]} L${end[0]},${end[1]}`;
-      })
-      .attr("fill", "none")
-      .attr("stroke", "#00bfff")
-      .attr("stroke-linecap", "round")
-      .attr("stroke-width", (d) => widthScale(d.trip_count))
-      .attr("opacity", 0.55)
-      .on("mouseover", function (event, d) {
-        d3.select(this).attr("opacity", 0.95).attr("stroke", "#ffd447");
-        tooltip
-          .style("opacity", 1)
-          .html(
-            `<strong>${d.start_station_name}</strong> → <strong>${d.end_station_name}</strong><br>` +
-              `${formatNumber(d.trip_count)} trips`,
-          );
-      })
-      .on("mousemove", function (event) {
-        tooltip.style("left", `${event.pageX + 12}px`).style("top", `${event.pageY + 12}px`);
-      })
-      .on("mouseout", function () {
-        d3.select(this).attr("opacity", 0.55).attr("stroke", "#00bfff");
-        tooltip.style("opacity", 0);
+    routeFeatures.forEach((feature, index) => {
+      feature.properties = feature.properties || {};
+      feature.properties._index = index;
+    });
+
+    const routeState = routeFeatures.reduce((acc, feature) => {
+      acc[feature.properties._index] = true;
+      return acc;
+    }, {});
+
+    const segmentKey = (a, b) => {
+      const aKey = `${a[0].toFixed(5)},${a[1].toFixed(5)}`;
+      const bKey = `${b[0].toFixed(5)},${b[1].toFixed(5)}`;
+      return aKey < bKey ? `${aKey}|${bKey}` : `${bKey}|${aKey}`;
+    };
+
+    const collectSegments = (feature) => {
+      const geom = feature.geometry || {};
+      const segments = [];
+      const pushSegments = (coords) => {
+        for (let i = 0; i < coords.length - 1; i += 1) {
+          segments.push(segmentKey(coords[i], coords[i + 1]));
+        }
+      };
+
+      if (geom.type === "LineString") {
+        pushSegments(geom.coordinates || []);
+      } else if (geom.type === "MultiLineString") {
+        (geom.coordinates || []).forEach((coords) => pushSegments(coords));
+      }
+      return segments;
+    };
+
+    const segmentMap = new Map();
+    routeFeatures.forEach((feature) => {
+      const idx = feature.properties._index;
+      collectSegments(feature).forEach((key) => {
+        if (!segmentMap.has(key)) {
+          segmentMap.set(key, new Set());
+        }
+        segmentMap.get(key).add(idx);
       });
+    });
+
+    const adjacency = new Map();
+    segmentMap.forEach((indices) => {
+      if (indices.size < 2) return;
+      const list = Array.from(indices);
+      list.forEach((i) => {
+        if (!adjacency.has(i)) adjacency.set(i, new Set());
+        list.forEach((j) => {
+          if (i !== j) adjacency.get(i).add(j);
+        });
+      });
+    });
+
+    const overlapNeighbors = new Map();
+    routeFeatures.forEach((feature) => {
+      const idx = feature.properties._index;
+      overlapNeighbors.set(idx, Array.from(adjacency.get(idx) || []));
+    });
+
+    const baseWidth = 1.1;
+    const highlightScale = 1.8;
+
+    const routeGroups = mapGroup
+      .append("g")
+      .selectAll("g")
+      .data(routeFeatures)
+      .join("g")
+      .attr("data-route", (d) => d.properties._index)
+      .attr("opacity", 0.85);
+
+    routeGroups.each(function (d) {
+      const group = d3.select(this);
+      const primary = colorScale(d.properties._index);
+
+      const basePath = group
+        .append("path")
+        .attr("class", "route-base")
+        .attr("d", path)
+        .attr("fill", "none")
+        .attr("stroke", primary)
+        .attr("stroke-width", baseWidth)
+        .attr("stroke-linecap", "round")
+        .attr("stroke-linejoin", "round");
+
+      const overlayPath = group
+        .append("path")
+        .attr("class", "route-overlay")
+        .attr("d", path)
+        .attr("fill", "none")
+        .attr("stroke-width", baseWidth * 0.55)
+        .attr("stroke-linecap", "round")
+        .attr("stroke-linejoin", "round")
+        .style("display", "none")
+        .style("pointer-events", "none");
+
+      basePath
+        .on("mouseover", function () {
+          basePath.attr("stroke-width", baseWidth * highlightScale);
+          overlayPath.attr("stroke-width", baseWidth * highlightScale * 0.55);
+          group.attr("opacity", 1);
+          tooltip
+            .style("opacity", 1)
+            .html(
+              `<strong>${d.properties.start_station_name}</strong> → ` +
+                `<strong>${d.properties.end_station_name}</strong><br>` +
+                `${formatNumber(d.properties.trip_count)} trips`,
+            );
+        })
+        .on("mousemove", function (event) {
+          tooltip.style("left", `${event.pageX + 12}px`).style("top", `${event.pageY + 12}px`);
+        })
+        .on("mouseout", function () {
+          const isActive = routeState[d.properties._index];
+          basePath.attr("stroke-width", baseWidth);
+          overlayPath.attr("stroke-width", baseWidth * 0.55);
+          group.attr("opacity", isActive ? 0.85 : 0.12);
+          tooltip.style("opacity", 0);
+        });
+    });
+
+    const updateOverlapStyles = () => {
+      routeGroups.each(function (d) {
+        const group = d3.select(this);
+        const overlayPath = group.select("path.route-overlay");
+        const idx = d.properties._index;
+        const isActive = routeState[idx];
+        if (!isActive) {
+          overlayPath.style("display", "none");
+          return;
+        }
+        const neighbors = overlapNeighbors.get(idx) || [];
+        const activeNeighbor = neighbors.find((neighbor) => routeState[neighbor]);
+        if (activeNeighbor === undefined) {
+          overlayPath.style("display", "none");
+        } else {
+          overlayPath.style("display", null).attr("stroke", colorScale(activeNeighbor));
+        }
+      });
+    };
+
+    updateOverlapStyles();
+
+    const getEndpoints = (feature) => {
+      const geom = feature.geometry || {};
+      if (geom.type === "LineString") {
+        const coords = geom.coordinates || [];
+        return coords.length >= 2
+          ? { start: coords[0], end: coords[coords.length - 1] }
+          : null;
+      }
+      if (geom.type === "MultiLineString") {
+        const parts = geom.coordinates || [];
+        if (!parts.length) return null;
+        const first = parts[0] || [];
+        const last = parts[parts.length - 1] || [];
+        if (!first.length || !last.length) return null;
+        return {
+          start: first[0],
+          end: last[last.length - 1],
+        };
+      }
+      return null;
+    };
+
+    const pointIndex = new Map();
+    routeFeatures.forEach((feature) => {
+      const endpoints = getEndpoints(feature);
+      if (!endpoints) return;
+      const points = [
+        { coord: endpoints.start, role: "start" },
+        { coord: endpoints.end, role: "end" },
+      ];
+      points.forEach(({ coord, role }) => {
+        const key = `${coord[0].toFixed(6)}|${coord[1].toFixed(6)}`;
+        const entry =
+          pointIndex.get(key) || { lng: coord[0], lat: coord[1], hasStart: false, hasEnd: false };
+        if (role === "start") entry.hasStart = true;
+        if (role === "end") entry.hasEnd = true;
+        pointIndex.set(key, entry);
+      });
+    });
+
+    const endpointData = Array.from(pointIndex.values());
+    const endpointGroup = mapGroup.append("g");
+
+    endpointGroup
+      .selectAll("circle")
+      .data(endpointData)
+      .join("circle")
+      .attr("cx", (d) => projection([d.lng, d.lat])[0])
+      .attr("cy", (d) => projection([d.lng, d.lat])[1])
+      .attr("r", 0.735)
+      .attr("fill", (d) => (d.hasStart ? "#00ff57" : "#ff2bf7"))
+      .attr("stroke", (d) => (d.hasStart && d.hasEnd ? "#ff2bf7" : d.hasStart ? "#00ff57" : "#ff2bf7"))
+      .attr("stroke-width", 0.4)
+      .attr("opacity", 0.9);
+
+    const legend = svg.append("g").attr("transform", "translate(24,24)");
+
+    legend
+      .selectAll("g")
+      .data(routeFeatures)
+      .join("g")
+      .attr("transform", (d, i) => `translate(0, ${i * 18})`)
+      .attr("class", "overview-map__legend-item")
+      .style("cursor", "pointer")
+      .on("click", (event, d) => {
+        const idx = d.properties._index;
+        routeState[idx] = !routeState[idx];
+        routeGroups
+          .filter((route) => route.properties._index === idx)
+          .attr("opacity", routeState[idx] ? 0.85 : 0.12);
+        updateOverlapStyles();
+        legend
+          .select(`rect[data-route='${idx}']`)
+          .attr("opacity", routeState[idx] ? 1 : 0.35);
+        legend
+          .select(`text[data-route='${idx}']`)
+          .attr("opacity", routeState[idx] ? 1 : 0.5);
+      })
+      .call((g) => {
+        g.append("rect")
+          .attr("data-route", (d) => d.properties._index)
+          .attr("width", 10)
+          .attr("height", 10)
+          .attr("fill", (d) => colorScale(d.properties._index))
+          .attr("rx", 2);
+
+        g.append("text")
+          .attr("data-route", (d) => d.properties._index)
+          .attr("x", 16)
+          .attr("y", 9)
+          .attr("fill", "#f2f3f4")
+          .attr("font-size", 11)
+          .text(
+            (d) =>
+              `${d.properties.start_station_name} → ${d.properties.end_station_name}`,
+          );
+      });
+
+    const endpointLegend = svg.append("g").attr("class", "overview-map__legend-item");
+    const legendX = width - 180;
+    const legendY = 24;
+    endpointLegend.attr("transform", `translate(${legendX},${legendY})`);
+
+    const endpointItems = [
+      { label: "Start station", color: "#00ff57" },
+      { label: "End station", color: "#ff2bf7" },
+    ];
+
+    endpointLegend
+      .selectAll("g")
+      .data(endpointItems)
+      .join("g")
+      .attr("transform", (d, i) => `translate(0, ${i * 16})`)
+      .call((g) => {
+        g.append("circle")
+          .attr("cx", 6)
+          .attr("cy", 6)
+          .attr("r", 4)
+          .attr("fill", (d) => d.color);
+
+        g.append("text")
+          .attr("x", 16)
+          .attr("y", 9)
+          .attr("fill", "#f2f3f4")
+          .attr("font-size", 11)
+          .text((d) => d.label);
+      });
+
+    const legendNode = legend.node();
+    if (legendNode) {
+      const padding = 8;
+      const bbox = legendNode.getBBox();
+      legend
+        .insert("rect", ":first-child")
+        .attr("class", "overview-map__legend-box")
+        .attr("x", bbox.x - padding)
+        .attr("y", bbox.y - padding)
+        .attr("width", bbox.width + padding * 2)
+        .attr("height", bbox.height + padding * 2)
+        .attr("rx", 8);
+    }
+
+    const endpointLegendNode = endpointLegend.node();
+    if (endpointLegendNode) {
+      const padding = 8;
+      const bbox = endpointLegendNode.getBBox();
+      endpointLegend
+        .insert("rect", ":first-child")
+        .attr("class", "overview-map__legend-box")
+        .attr("x", bbox.x - padding)
+        .attr("y", bbox.y - padding)
+        .attr("width", bbox.width + padding * 2)
+        .attr("height", bbox.height + padding * 2)
+        .attr("rx", 8);
+    }
   }
 
   function renderHourlyLine(data) {
@@ -133,7 +450,7 @@
     const node = container.node();
     const width = node.clientWidth || 700;
     const height = node.clientHeight || 320;
-    const margin = { top: 24, right: 24, bottom: 52, left: 56 };
+    const margin = { top: 24, right: 24, bottom: 52, left: 90 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -146,12 +463,16 @@
 
     const hours = d3.range(0, 24);
     const grouped = d3.group(data, (d) => d.member_casual);
-    const maxValue = d3.max(data, (d) => d.trip_count) || 1;
 
     if (!renderHourlyLine.activeGroups) {
       renderHourlyLine.activeGroups = new Set(["member", "casual"]);
     }
     const activeGroups = Array.from(renderHourlyLine.activeGroups);
+    const maxValue =
+      d3.max(
+        data.filter((d) => activeGroups.includes(d.member_casual)),
+        (d) => d.trip_count,
+      ) || 1;
 
     const x = d3.scaleLinear().domain([0, 23]).range([0, innerWidth]);
     const y = d3.scaleLinear().domain([0, maxValue * 1.15]).range([innerHeight, 0]);
@@ -176,7 +497,7 @@
       .attr("class", "tripdata-axis-label")
       .attr("transform", "rotate(-90)")
       .attr("x", -innerHeight / 2)
-      .attr("y", -46)
+      .attr("y", -60)
       .attr("text-anchor", "middle")
       .text("Trips");
 
@@ -234,6 +555,7 @@
     const legend = d3.select("#bike-hourly-legend");
     if (!legend.empty()) {
       legend.selectAll("*").remove();
+      styleLegendRow(legend);
 
       const items = legend
         .selectAll("div")
@@ -271,7 +593,7 @@
     const node = container.node();
     const width = node.clientWidth || 420;
     const height = node.clientHeight || 260;
-    const margin = { top: 20, right: 20, bottom: 24, left: 170 };
+    const margin = { top: 20, right: 20, bottom: 24, left: 210 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -337,7 +659,7 @@
     const node = container.node();
     const width = node.clientWidth || 420;
     const height = node.clientHeight || 260;
-    const margin = { top: 20, right: 20, bottom: 52, left: 56 };
+    const margin = { top: 20, right: 20, bottom: 64, left: 80 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -371,18 +693,31 @@
     g.append("g")
       .attr("class", "mobility-bars__axis mobility-bars__axis--x")
       .attr("transform", `translate(0,${innerHeight})`)
-      .call(d3.axisBottom(x).tickPadding(8));
+      .call(
+        d3
+          .axisBottom(x)
+          .tickPadding(10)
+          .tickFormat((d) => String(d).replace(/\s*min$/i, "")),
+      );
 
     g.append("g")
       .attr("class", "mobility-bars__axis mobility-bars__axis--y")
       .call(d3.axisLeft(y).ticks(4).tickFormat(formatNumber));
 
-    g.append("text")
+    const xAxisLabel = g.append("text")
       .attr("class", "tripdata-axis-label")
       .attr("x", innerWidth / 2)
-      .attr("y", innerHeight + 42)
-      .attr("text-anchor", "middle")
-      .text("Trip duration");
+      .attr("y", innerHeight + 44)
+      .attr("text-anchor", "middle");
+
+    const xAxisLabelLines = ["Trip duration", "(min)"];
+    xAxisLabel
+      .selectAll("tspan")
+      .data(xAxisLabelLines)
+      .join("tspan")
+      .attr("x", innerWidth / 2)
+      .attr("dy", (d, i) => (i === 0 ? 0 : 16))
+      .text((d) => d);
 
     g.append("text")
       .attr("class", "tripdata-axis-label")
@@ -422,9 +757,46 @@
         d3.select(this).attr("fill", USER_COLORS[d.key] || "#cccccc");
         tooltip.style("opacity", 0);
       });
+
+    const totalsByBin = new Map();
+    stackedInput.forEach((row) => {
+      const total = keys.reduce((sum, key) => sum + (row[key] || 0), 0);
+      totalsByBin.set(row.bin, total);
+    });
+
+    g.selectAll("text.tripdata-bar-total")
+      .data(bins)
+      .join("text")
+      .attr("class", "tripdata-bar-total")
+      .attr("x", (d) => x(d) + x.bandwidth() / 2)
+      .attr("y", (d) => y(totalsByBin.get(d) || 0) - 6)
+      .attr("text-anchor", "middle")
+      .attr("fill", "#2b2b2b")
+      .attr("font-size", 14)
+      .attr("font-weight", "700")
+      .text((d) => formatNumber(totalsByBin.get(d) || 0));
+
+    const legend = d3.select("#bike-duration-legend");
+    if (!legend.empty()) {
+      legend.selectAll("*").remove();
+      styleLegendRow(legend);
+
+      const items = legend
+        .selectAll("div")
+        .data(keys)
+        .join("div")
+        .attr("class", "tripdata-legend__item");
+
+      items
+        .append("span")
+        .attr("class", "tripdata-legend__swatch")
+        .style("background", (d) => USER_COLORS[d] || "#cccccc");
+
+      items.append("span").text((d) => d);
+    }
   }
 
-  function renderPie(selector, data, colorMap) {
+  function renderPie(selector, data, colorMap, legendSelector, labelOptions = {}) {
     const container = d3.select(selector);
     if (container.empty()) return;
 
@@ -479,74 +851,105 @@
         tooltip.style("opacity", 0);
       });
 
+    const labelStroke = labelOptions.stroke === false ? null : labelOptions.stroke || "#f2f3f4";
+    const labelStrokeWidth = labelOptions.stroke === false ? null : labelOptions.strokeWidth || 2;
+
     g.selectAll("text")
       .data(pie(pieData))
       .join("text")
       .attr("transform", (d) => `translate(${labelArc.centroid(d)})`)
       .attr("text-anchor", "middle")
       .attr("dy", "0.35em")
-      .attr("fill", "#f2f3f4")
-      .attr("font-size", 12)
-      .attr("font-weight", "700")
-      .attr("stroke", "#101010")
-      .attr("stroke-width", 3)
-      .attr("paint-order", "stroke")
+      .attr("fill", labelOptions.fill || "#2b2b2b")
+      .attr("font-size", labelOptions.fontSize || 12)
+      .attr("font-weight", labelOptions.fontWeight || "700")
+      .attr("stroke", labelStroke)
+      .attr("stroke-width", labelStrokeWidth)
+      .attr("paint-order", labelStroke ? "stroke" : null)
       .text((d) => `${Math.round((d.data.value / total) * 100)}%`);
+
+    if (legendSelector) {
+      const legend = d3.select(legendSelector);
+      if (!legend.empty()) {
+        legend.selectAll("*").remove();
+        styleLegendRow(legend);
+
+        const items = legend
+          .selectAll("div")
+          .data(pieData)
+          .join("div")
+          .attr("class", "tripdata-legend__item");
+
+        items
+          .append("span")
+          .attr("class", "tripdata-legend__swatch")
+          .style("background", (d) => d.color);
+
+        items.append("span").text((d) => d.label);
+      }
+    }
   }
 
-  Promise.all([
-    d3.csv(FILES.flows, (d) => ({
-      start_station_id: d.start_station_id,
-      start_station_name: d.start_station_name,
-      start_lat: Number(d.start_lat),
-      start_lng: Number(d.start_lng),
-      end_station_id: d.end_station_id,
-      end_station_name: d.end_station_name,
-      end_lat: Number(d.end_lat),
-      end_lng: Number(d.end_lng),
-      trip_count: Number(d.trip_count),
-    })),
-    d3.csv(FILES.stations, (d) => ({
-      station_name: d.station_name,
-      trip_count: Number(d.trip_count),
-    })),
-    d3.csv(FILES.hourly, (d) => ({
-      hour: Number(d.hour),
-      member_casual: d.member_casual,
-      trip_count: Number(d.trip_count),
-    })),
-    d3.csv(FILES.duration, (d) => ({
-      duration_bin: d.duration_bin,
-      member_casual: d.member_casual,
-      trip_count: Number(d.trip_count),
-    })),
-    d3.csv(FILES.members, (d) => ({
-      label: d.member_casual,
-      value: Number(d.trip_count),
-    })),
-    d3.csv(FILES.rideable, (d) => ({
-      label: d.rideable_type,
-      value: Number(d.trip_count),
-    })),
-    d3.json(FILES.boroughs),
-  ])
-    .then(([flows, stations, hourly, duration, members, rideable, boroughs]) => {
-      renderFlowMap(flows, boroughs);
-      renderHourlyLine(hourly);
-      renderTopStations(stations);
-      renderDurationBins(duration);
-      renderPie("#bike-member-share", members, USER_COLORS);
-      renderPie(
-        "#bike-rideable-share",
-        rideable,
-        {
-          classic_bike: "#00bfff",
-          electric_bike: "#ff3bff",
-          docked_bike: "#1ad15b",
-        },
-      );
-    })
-    .catch((error) => {
-      console.error("Failed to load tripdata CSVs", error);
-    });
+    Promise.all([
+      d3.json(FILES.routes),
+      loadCsv(FILES.stations, (d) => ({
+        station_name: d.station_name,
+        trip_count: Number(d.trip_count),
+      })),
+      loadCsv(FILES.hourly, (d) => ({
+        hour: Number(d.hour),
+        member_casual: d.member_casual,
+        trip_count: Number(d.trip_count),
+      })),
+      loadCsv(FILES.duration, (d) => ({
+        duration_bin: d.duration_bin,
+        member_casual: d.member_casual,
+        trip_count: Number(d.trip_count),
+      })),
+      loadCsv(FILES.members, (d) => ({
+        label: d.member_casual,
+        value: Number(d.trip_count),
+      })),
+      loadCsv(FILES.rideable, (d) => ({
+        label: d.rideable_type,
+        value: Number(d.trip_count),
+      })),
+      d3.json(FILES.boroughs),
+    ])
+      .then(([routes, stations, hourly, duration, members, rideable, boroughs]) => {
+        renderFlowMap(routes, boroughs);
+        renderHourlyLine(hourly);
+        renderTopStations(stations);
+        renderDurationBins(duration);
+        renderPie(
+          "#bike-member-share",
+          members,
+          USER_COLORS,
+          "#bike-member-legend",
+          { fill: "#f2f3f4", stroke: "#101010", strokeWidth: 2.5, fontSize: 13 },
+        );
+        renderPie(
+          "#bike-rideable-share",
+          rideable,
+          {
+            classic_bike: "#ff8c00",
+            electric_bike: "#1f77b4",
+            docked_bike: "#6a5acd",
+          },
+          "#bike-rideable-legend",
+          { fill: "#f2f3f4", stroke: "#101010", strokeWidth: 2.5, fontSize: 13 },
+        );
+      })
+      .catch((error) => {
+        console.error("Failed to load tripdata assets", error);
+      });
+  }
+
+  if (typeof window.registerLazyInit === "function") {
+    window.registerLazyInit("#bike-flow-map", initTripdataCharts);
+  } else if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initTripdataCharts);
+  } else {
+    initTripdataCharts();
+  }
 })();

@@ -75,6 +75,7 @@ data/processed/
 # Optional: raw/downloaded data (uncomment if you never want to track it)
 # data/raw/
 data/tripdata/
+data/yellow_taxi/
 # *.csv
 
 # --- Frontend / web toolchains (safe even if you don't use them now) ---

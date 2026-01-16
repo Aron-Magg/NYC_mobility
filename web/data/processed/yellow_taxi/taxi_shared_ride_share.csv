@@ -1,0 +1,5 @@
+service,shared_trip,trips,share
+fhv,True,40529366,0.0542
+fhv,False,707190837,0.9458
+hvfhs,True,41712882,0.0445
+hvfhs,False,895758131,0.9555
