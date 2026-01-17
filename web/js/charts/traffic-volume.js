@@ -6,7 +6,7 @@
     return;
   }
 
-  const DATA_BASE = "../data/processed/traffic";
+  const DATA_BASE = "data/processed/traffic";
   const FILES = {
     hourly: `${DATA_BASE}/hourly_by_borough.csv`,
     weekend: `${DATA_BASE}/weekday_vs_weekend.csv`,
