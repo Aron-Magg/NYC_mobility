@@ -2,6 +2,7 @@
   "base": "Automated_Traffic_Volume_Counts.csv",
   "parts": [
     "Automated_Traffic_Volume_Counts_part1.csv",
-    "Automated_Traffic_Volume_Counts_part2.csv"
+    "Automated_Traffic_Volume_Counts_part2.csv",
+    "Automated_Traffic_Volume_Counts_part3.csv"
   ]
 }

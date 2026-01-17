@@ -141,7 +141,66 @@ def split_csv(path: Path, max_bytes: int) -> list[Path]:
     return part_paths
 
 
+def split_part_group(base_path: Path, part_paths: list[Path], max_bytes: int) -> list[Path]:
+    sorted_parts = sort_parts(part_paths)
+    total_bytes = sum(p.stat().st_size for p in sorted_parts)
+    if not total_bytes:
+        return []
+
+    output_paths: list[Path] = []
+    part_index = 1
+    current_bytes = 0
+    part_handle = None
+    header: str | None = None
+
+    def open_part(index: int) -> tuple[Path, object]:
+        out_path = base_path.with_name(f"{base_path.stem}_part{index}{base_path.suffix}")
+        handle = out_path.open("w", encoding="utf-8", newline="")
+        return out_path, handle
+
+    with tqdm(
+        total=total_bytes,
+        unit="B",
+        unit_scale=True,
+        desc=f"Resplitting {base_path.name}",
+    ) as bar:
+        for input_path in sorted_parts:
+            with input_path.open("r", encoding="utf-8", newline="") as source:
+                input_header = source.readline()
+                if not input_header:
+                    continue
+                bar.update(len(input_header.encode("utf-8")))
+                if header is None:
+                    header = input_header
+                if part_handle is None:
+                    out_path, part_handle = open_part(part_index)
+                    part_handle.write(header)
+                    output_paths.append(out_path)
+                    current_bytes = len(header.encode("utf-8"))
+
+                for line in source:
+                    line_bytes = len(line.encode("utf-8"))
+                    if current_bytes + line_bytes > max_bytes and current_bytes > 0:
+                        part_handle.close()
+                        part_index += 1
+                        out_path, part_handle = open_part(part_index)
+                        part_handle.write(header)
+                        output_paths.append(out_path)
+                        current_bytes = len(header.encode("utf-8"))
+
+                    part_handle.write(line)
+                    current_bytes += line_bytes
+                    bar.update(line_bytes)
+
+    if part_handle:
+        part_handle.close()
+
+    return output_paths
+
+
 def should_split(path: Path, max_bytes: int) -> bool:
+    if not path.exists():
+        return False
     if path.suffix.lower() not in TARGET_EXTENSIONS:
         return False
     if PART_RE.match(path.name):
@@ -215,6 +274,29 @@ def main() -> None:
     processed_bases = set()
 
     for base_path, part_paths in existing_parts.items():
+        if base_path.exists() and base_path.stat().st_size > max_bytes:
+            for part in part_paths:
+                part.unlink(missing_ok=True)
+            remove_part_manifest(base_path)
+            new_parts = split_csv(base_path, max_bytes)
+            if new_parts:
+                write_manifest(base_path, new_parts)
+            if args.remove_original:
+                base_path.unlink(missing_ok=True)
+            processed_bases.add(base_path)
+            continue
+
+        oversize_parts = [part for part in part_paths if part.stat().st_size > max_bytes]
+        if oversize_parts:
+            new_parts = split_part_group(base_path, part_paths, max_bytes)
+            for part in part_paths:
+                part.unlink(missing_ok=True)
+            remove_part_manifest(base_path)
+            if new_parts:
+                write_manifest(base_path, new_parts)
+            processed_bases.add(base_path)
+            continue
+
         write_manifest(base_path, part_paths)
         processed_bases.add(base_path)
 
