@@ -1,0 +1,11 @@
+Boro,is_weekend,avg_volume
+Bronx,False,126.32523113207547
+Bronx,True,136.9360270538161
+Brooklyn,False,97.51634766535274
+Brooklyn,True,95.52544703350426
+Manhattan,False,156.32268086995117
+Manhattan,True,137.4975240715268
+Queens,False,107.37406001097581
+Queens,True,93.61164507049561
+Staten Island,False,91.12840417112797
+Staten Island,True,82.29429794124451

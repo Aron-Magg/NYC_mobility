@@ -10,7 +10,7 @@ RAW_PART_PATTERNS = [
     "Automated_Traffic_Volume_Counts_part*.csv",
     "Automated_Traffic_Volume_Counts.part*.csv",
 ]
-OUT_DIR = Path("data/processed/traffic")
+OUT_DIR = Path("web/data/processed/traffic")
 
 CHUNK_SIZE = 250_000
 
